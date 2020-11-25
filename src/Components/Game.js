@@ -61,12 +61,9 @@ export const TicTacToe = {
         if(G.cells[playerPosition]){
           const newPosition =  G.playerPosition[ctx.currentPlayer] + num
           let tempArray = G.cells[newPosition];
-          console.log(ctx.currentPlayer)
           if(ctx.currentPlayer === "0"){
-            console.log("blue")
             tempArray.push("blue")
           } else if(ctx.currentPlayer === "1"){
-            console.log("red")
             tempArray.push("red")
           }
           G.playerPosition[ctx.currentPlayer] = newPosition;
