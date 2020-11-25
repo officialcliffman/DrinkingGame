@@ -2,7 +2,6 @@ import './App.css';
 import {TicTacToeBoard} from './Components/Board';
 import { TicTacToe } from './Components/Game';
 import { Client } from 'boardgame.io/react';
-import './styles.css'
 
 const DrinkingGameClient = Client({
     game: TicTacToe,

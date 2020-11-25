@@ -1,7 +1,11 @@
 import React from 'react';
-import '../styles.css'
-
+import Dice from './Dice';
 export const TicTacToeBoard = (props) => {
+
+	const rollDoneCallback = (num) => {
+		console.log('You rolled a ' + num)
+		props.moves.rollDie(num);
+      }
 
 	const handleDiceRoll = () => {
 		console.log(props.G)
@@ -29,7 +33,7 @@ export const TicTacToeBoard = (props) => {
 	return (
 		<div>
 			<h1>Drinking Game</h1>
-			<table id="t01">
+			<table id="t01" border={1}>
 				<tr>
 					<td id="1" style={{height: 100, width: 100}}>{props.G.cells[1]}</td>
 					<td id="2" style={{height: 100, width: 100}}>{props.G.cells[2]}</td>
@@ -56,7 +60,7 @@ export const TicTacToeBoard = (props) => {
 				</tr>
 			</table>
 			{/* <p>{dice}</p> */}
-            <button onClick={() => handleDiceRoll()}>Roll Dice</button>
+			<Dice rollDoneCallback={rollDoneCallback}/>
 		</div>
 	);
 }
