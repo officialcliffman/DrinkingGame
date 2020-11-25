@@ -43,8 +43,7 @@ export const TicTacToe = {
     },
     numPlayers: 3,
     moves: {
-      rollDie: (G, ctx) => {
-        const randNumber = ctx.random.D6();
+      rollDie: (G, ctx, num) => {
         const playerPosition = G.playerPosition[ctx.currentPlayer];
         const index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
 
@@ -53,7 +52,7 @@ export const TicTacToe = {
         }
 
         if(G.cells[playerPosition]){
-          const newPosition =  G.playerPosition[ctx.currentPlayer] + randNumber
+          const newPosition =  G.playerPosition[ctx.currentPlayer] + num
           let tempArray = G.cells[newPosition];
           tempArray.push(ctx.currentPlayer);
           G.playerPosition[ctx.currentPlayer] = newPosition;
