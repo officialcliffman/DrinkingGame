@@ -1,5 +1,6 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
 
+
 const IsVictory = (cells) => {
     const positions = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
@@ -45,7 +46,13 @@ export const TicTacToe = {
     moves: {
       rollDie: (G, ctx, num) => {
         const playerPosition = G.playerPosition[ctx.currentPlayer];
-        const index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
+        let index = "";
+
+        if(ctx.currentPlayer === "0"){
+          index = G.cells[playerPosition].indexOf("blue");
+        } else if(ctx.currentPlayer === "1"){
+          index = G.cells[playerPosition].indexOf("red");
+        }
 
         if(index > -1){
           G.cells[playerPosition].splice(index, 1);
@@ -54,7 +61,11 @@ export const TicTacToe = {
         if(G.cells[playerPosition]){
           const newPosition =  G.playerPosition[ctx.currentPlayer] + num
           let tempArray = G.cells[newPosition];
-          tempArray.push(ctx.currentPlayer);
+          if(ctx.currentPlayer === "0"){
+            tempArray.push("blue")
+          } else if(ctx.currentPlayer === "1"){
+            tempArray.push("red")
+          }
           G.playerPosition[ctx.currentPlayer] = newPosition;
           G.cells[newPosition] = tempArray;
         }
