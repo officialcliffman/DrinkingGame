@@ -1,55 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Dice from './Dice';
-import { Button, TextField, FormGroup, Select, MenuItem } from '@material-ui/core';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import PlayerSetup from './PlayerSetup';
 export const TicTacToeBoard = (props) => {
-	
+
+	// Triggers the rollDie move and passes the randomly generated number
 	const rollDoneCallback = (num) => {
-		console.log('You rolled a ' + num)
 		props.moves.rollDie(num);
 	}
 
-	const handleDiceRoll = () => {
-		console.log(props.G)
-		props.moves.rollDie();
-	}
-	//   const onClick = (id) => {
-	//     this.props.moves.clickCell(id);
-	//   }
-
-	//   render() {
-	//     let winner = '';
-	//     if (this.props.ctx.gameover) {
-	//       winner =
-	//         this.props.ctx.gameover.winner !== undefined ? (
-	//           <div id="winner">Winner: {this.props.ctx.gameover.winner}</div>
-	//         ) : (
-	//           <div id="winner">Draw!</div>
-	//         );
-	//     }
-
-
-
+	// Assigns the players icons colors to match the ones selected in the player setup
 	const getPieces = (arrayOfPlayers) => {
+		const colors = ['red', 'blue', 'black', 'green', 'purple', 'brown'];
 		let tempArray = [];
 		if (arrayOfPlayers !== []) {
-			tempArray = arrayOfPlayers.map(player => <div style={{ color: player }}><DirectionsWalkIcon color={"inherit"} /></div>)
+			tempArray = arrayOfPlayers.map(player => {
+				
+				return <div style={{ color: colors[props.G.playerInfos[player].color] }}><DirectionsWalkIcon color={"inherit"} /></div>
+			}
+			)
 		}
 		return tempArray;
-
 	}
 
 
 	return (
 		<>
-			{console.log(props.ctx.phase)}
+			{/* If the game hasn't started yet and players are still on the lobby screen */}
 			{props.ctx.phase === "setup" ?
 				<>
-					<PlayerSetup playerInfos={props.G.playerInfos} playerID={props.playerID} moves={props.moves} activePlayers={props.ctx.activePlayers} />
+					<PlayerSetup playerInfos={props.G.playerInfos} playerID={props.playerID} moves={props.moves} maxPlayers={props.ctx.activePlayers} />
 				</>
 				:
 				<>
+				{/* If the game has started */}
 					<h1>Drinking Game</h1>
 					<table id="t01" border={1}>
 						<tr>
@@ -77,7 +61,6 @@ export const TicTacToeBoard = (props) => {
 							<td id="20" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[20])}</td>
 						</tr>
 					</table>
-					{/* <p>{dice}</p> */}
 					<Dice rollDoneCallback={rollDoneCallback} />
 				</>
 			}

@@ -2,28 +2,28 @@ import { TicTacToeBoard } from './Board';
 import { TicTacToe } from './Game';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 const MainGame = ({ matchID, lobbyClient }) => {
-    const [playerInfo, setPlayerInfo] = useState({
-        playerID: undefined,
-        playerCredentials: undefined,
-    })
+    /**
+     * Creates a state to save the gameState
+     */
     const [gameState, setGameState] = useState(<></>)
-    console.log(matchID)
-    console.log(lobbyClient)
 
-    useEffect(async () => {
-        setGameState(await getPlayers());
-    }, []);
+    /**
+     * A function which gets the game state
+     */
+    const getPlayers = useCallback( async () => {
 
-    const getPlayers = async () => {
+        // Creates the game client
         const DrinkingGameClient = Client({
             game: TicTacToe,
             board: TicTacToeBoard,
             numPlayers: 6,
             multiplayer: SocketIO({ server: 'localhost:8000' }),
         });
+
+        // Gets the match that matches the ID and checks if the user has already joined this game, if they have assign playerID and playerCredentials
         const match = await lobbyClient.getMatch('TicTacToe', matchID);
         let playerID = null;
         let playerCredentials = null;
@@ -31,42 +31,37 @@ const MainGame = ({ matchID, lobbyClient }) => {
         playerCredentials = window.localStorage.getItem(
             `playerCredentials for matchID=${matchID}`
         );
-        console.log(playerID)
-        if (playerID != null && playerCredentials != null) {
-            setPlayerInfo({
-                playerID,
-                playerCredentials,
-            });
-        }else{
 
+        // If the user hasn't already joined this match, assign them a new unique playerID and playerCredentials
+        if (playerID === null && playerCredentials === null) {
             playerID = "0";
+
+            // Checks to see if the game is full
             const thereIsRoom = match.players.some((player, i) => {
                 playerID = i.toString();
                 return !player.hasOwnProperty("name");
             });
-
             if (!thereIsRoom) {
                 alert("This game is full!");
                 return;
-            } else {
-                alert("There is room")
             }
+
+            // Join the game with the newly assigned playerID
             const resp = await lobbyClient.joinMatch("TicTacToe", matchID, {
                 playerID,
                 playerName: playerID,
             });
             playerCredentials = resp.playerCredentials.toString();
-            setPlayerInfo({
-                playerCredentials,
-                playerID,
-            });
+
+            // Setting the users ID and credentials for this session
             window.localStorage.setItem(`playerID for matchID=${matchID}`, playerID);
             window.localStorage.setItem(
                 `playerCredentials for matchID=${matchID}`,
                 playerCredentials
             );
         }
-        console.log(matchID)
+        
+        // Return the game client with the details which link the match and the player together
         return(
             <>
                 {playerID === null ?
@@ -76,28 +71,20 @@ const MainGame = ({ matchID, lobbyClient }) => {
                 }
             </>
         )
-    }
+    },[lobbyClient, matchID]);
 
-   
+    // On load, get the state of the match
+    useEffect(() => {
+        const getGameState = async () => {
+            setGameState(await getPlayers());
+        }
+        getGameState();
+    }, [getPlayers]);
 
-
-    // const { playerCredentials } = await lobbyClient.joinMatch(
-    //     'TicTacToe',
-    //     matchID,
-    //     {
-    //       playerID: '0',
-    //       playerName: 'Jon',
-    //     }
-    //   );
-
-
-    // const [dice, setDice] = useState(1);
-
+    // Return the final game state
     return (
         <>
-
             {gameState}
-            {/* <DrinkingGameClient playerID="1" />        */}
         </>
     )
 }

@@ -6,20 +6,34 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 const App = () => {
 
+    /**
+     * Create a lobby which is hosted on the server
+     */
     const lobbyClient = new LobbyClient({ server: 'http://localhost:8000', });
+
+    /**
+     * Creates a match on the lobbyClient and returns a matchID
+     */
     const createMatch = async () => {
         const { matchID } = await lobbyClient.createMatch("TicTacToe", {
             numPlayers: 6,
         })
-
-
+        // Changes URL to end with /match/matchID
         window.location.href = `/match/${matchID}`;
     }
 
+
+    /**
+     * Will be removed at some point but gets all players that are connected to the match
+     */
     const listPlayers = async (matchID) => {
         const matches = await lobbyClient.getMatch('TicTacToe', matchID);
         console.log(matches)
     }
+
+    /**
+     * Changes what's being displayed based on the URL
+     */
     return (
         <BrowserRouter>
             <Switch>
