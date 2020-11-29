@@ -64,7 +64,7 @@ export const TicTacToeBoard = (props) => {
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo newSquare={props.G.newSquare}/>
+					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells}/>
 
 				</>
 			}

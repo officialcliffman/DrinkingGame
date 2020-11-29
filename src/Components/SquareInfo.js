@@ -1,38 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, IconButton} from '@material-ui/core';
+import { Modal, IconButton, Card, CardMedia } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import AllImages from './AllImages';
 
-const SquareInfo = ({newSquare}) => {
-  // getModalStyle is not a pure function, we roll the style only on the first render
+const SquareInfo = ({ newSquare, cells }) => {
+  // State to open and close modal
   const [open, setOpen] = useState(false);
 
+  // open modal when a player is moved
   useEffect(() => {
-    setOpen(true)
+    if (newSquare !== 0) {
+      setOpen(true)
+    }
+  }, [newSquare, cells]);
 
-  }, [newSquare])
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
+  // Handle the close of the modal
   const handleClose = () => {
     setOpen(false);
   };
 
+  // The body of the modal
   const body = (
-    <div style={{backgroundColor: "white"}}>
+    <div style={{ backgroundColor: "white", width: "200px", height: "200px" }}>
       <IconButton onClick={handleClose}>
-        <CloseIcon style={{color: "red"}} />
+        <CloseIcon style={{ color: "red" }} />
       </IconButton>
-      <p>Hello</p>
+      <Card >
+        <CardMedia
+          image={AllImages[newSquare - 1]}
+          title="Square"
+          style={{ height: 100 }}
+          width="50"
+          component="img"
+          alt={"Square " + newSquare + " image"}
+        />
+      </Card>
     </div>
   );
 
   return (
-    <div>
-      <Button type="button" onClick={handleOpen}>
-        Open Modal
-        </Button>
+    <>
       <Modal
         open={open}
         onClose={handleClose}
@@ -41,7 +48,7 @@ const SquareInfo = ({newSquare}) => {
       >
         {body}
       </Modal>
-    </div>
+    </>
   );
 }
 
