@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FormGroup, Button, TextField, Select, MenuItem, Checkbox } from '@material-ui/core';
 
-const PlayerSetup = ({ playerInfos, playerID, moves, maxPlayers }) => {
+const PlayerSetup = ({ matchID, playerInfos, playerID, moves, maxPlayers }) => {
     useEffect(() => {
         // If it's the first time we join that game, we tell the game. It's going to assign
         // us a default name and color.
@@ -21,13 +21,12 @@ const PlayerSetup = ({ playerInfos, playerID, moves, maxPlayers }) => {
         for (const [key] of Object.entries(maxPlayers)) {
             arrayForLobby.push(
                 <FormGroup row key={key}>
-                    <Checkbox
-                        checked={playerInfos[key] ? playerInfos[key].ready : false}
-                        onChange={(e) => moves.setReady(e.target.checked)}
-                        name="ready-up"
-                        disabled={key !== playerID}
+                    <TextField 
+                        value={playerInfos[key] ? playerInfos[key].name : ""} 
+                        disabled={key !== playerID} 
+                        onChange={(e) => moves.setName(e.target.value)} 
+                        inputProps={{style: {height: "30px"}}} 
                     />
-                    <TextField value={playerInfos[key] ? playerInfos[key].name : ""} disabled={key !== playerID} onChange={(e) => moves.setName(e.target.value)} />
                     <Select
                         labelId="select-color"
                         id="select-color"
@@ -42,6 +41,12 @@ const PlayerSetup = ({ playerInfos, playerID, moves, maxPlayers }) => {
                         <MenuItem value={4}>Purple</MenuItem>
                         <MenuItem value={5}>Brown</MenuItem>
                     </Select>
+                    <Checkbox
+                        checked={playerInfos[key] ? playerInfos[key].ready : false}
+                        onChange={(e) => moves.setReady(e.target.checked)}
+                        name="ready-up"
+                        disabled={key !== playerID}
+                    />
                     
                 </FormGroup>)
         }
@@ -50,10 +55,11 @@ const PlayerSetup = ({ playerInfos, playerID, moves, maxPlayers }) => {
 
     // Display the lobby as well as start game button
     return (
-        <>
-            {createLobby()}
-            <Button onClick={() => moves.startGame()}>Start Game</Button>
-        </>
+        <div className={"lobby-menu"}>
+            <h1 className={"main-menu-header"}>Room: {matchID}</h1>
+           <div className={"lobby-form"}> {createLobby()} </div>
+            <Button className={"lobby-button"} onClick={() => moves.startGame()}>Start Game</Button> 
+        </div>
     )
 }
 

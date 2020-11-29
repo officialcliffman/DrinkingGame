@@ -54,7 +54,7 @@ export const TicTacToeBoard = (props) => {
 			{/* If the game hasn't started yet and players are still on the lobby screen */}
 			{props.ctx.phase === "setup" ?
 				<>
-					<PlayerSetup playerInfos={props.G.playerInfos} playerID={props.playerID} moves={props.moves} maxPlayers={props.ctx.activePlayers} />
+					<PlayerSetup matchID={props.matchID} playerInfos={props.G.playerInfos} playerID={props.playerID} moves={props.moves} maxPlayers={props.ctx.activePlayers} />
 				</>
 				:
 				<>

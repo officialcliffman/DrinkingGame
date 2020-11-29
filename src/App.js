@@ -3,6 +3,7 @@ import { Button } from '@material-ui/core';
 import MainGame from './Components/MainGame'
 import { LobbyClient } from 'boardgame.io/client';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import "./App.css"
 
 const App = () => {
 
@@ -22,49 +23,39 @@ const App = () => {
         window.location.href = `/match/${matchID}`;
     }
 
-
-    /**
-     * Will be removed at some point but gets all players that are connected to the match
-     */
-    const listPlayers = async (matchID) => {
-        const matches = await lobbyClient.getMatch('TicTacToe', matchID);
-        console.log(matches)
-    }
-
     /**
      * Changes what's being displayed based on the URL
      */
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route
-                    path="/match/:matchID"
-                    render={(props) => {
-                        const { matchID } = props.match.params;
-                        return (
-                            <>
-                                <h1>LOBBY + {matchID}</h1>
-                                <button onClick={() => listPlayers(matchID)}>listPlayers</button>
-                                <MainGame {...{ matchID, lobbyClient }} />
-                            </>
-                        );
-                    }}
-                />
-                <Route path="/"
-                    render={(props) => {
-                        return (
+        <div>
+            <BrowserRouter>
+                <Switch>
+                    <Route
+                        path="/match/:matchID"
+                        render={(props) => {
+                            const { matchID } = props.match.params;
+                            return (
+                                <>
+                                    <MainGame {...{ matchID, lobbyClient }} />
+                                </>
+                            );
+                        }}
+                    />
+                    <Route path="/"
+                        render={(props) => {
+                            return (
 
-                            <div>
-                                <h1>Select Number of Players</h1>
-                                <Button variant="contained" onClick={() => createMatch()}>Create game</Button>
-                                
-                            </div>
-                        );
-                    }}>
-                </Route>
-            </Switch>
-        </BrowserRouter>
+                                <div className={"main-menu"}>
+                                    <h1 className={"main-menu-header"}>Welcome to Drinking Game</h1>
+                                    <Button className={"main-menu-button"} variant="contained" onClick={() => createMatch()}>Create game</Button>
 
+                                </div>
+                            );
+                        }}>
+                    </Route>
+                </Switch>
+            </BrowserRouter>
+        </div>
     )
 }
 
