@@ -5,7 +5,8 @@ export const TicTacToe = {
   setup: () => ({
     cells: Array(21).fill([]),
     playerPosition: Array(6).fill(0),
-    playerInfos: {}
+    playerInfos: {},
+    newSquare: 0
   }),
 
   // Name of the game, links up with the server
@@ -153,6 +154,7 @@ export const TicTacToe = {
 
             G.playerPosition[ctx.currentPlayer] = newPosition;
             G.cells[newPosition] = tempArray;
+            G.newSquare=newPosition
           }
         },
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Dice from './Dice';
+import SquareInfo from './SquareInfo'
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import PlayerSetup from './PlayerSetup';
 import '../App.css';
@@ -90,6 +91,9 @@ export const TicTacToeBoard = (props) => {
 						</tr>
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
+
+					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells}/>
+
 				</>
 			}
 		</>
