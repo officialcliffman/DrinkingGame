@@ -1,9 +1,11 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 
+const boardSize = 21;
+
 export const TicTacToe = {
   // Settings to setup before the game starts
   setup: () => ({
-    cells: Array(21).fill([]),
+    cells: Array(boardSize).fill([]),
     playerPosition: Array(6).fill(0),
     playerInfos: {},
     newSquare: 0
@@ -148,8 +150,18 @@ export const TicTacToe = {
 
           // Set the new player position
           if (G.cells[playerPosition]) {
-            const newPosition = G.playerPosition[ctx.currentPlayer] + num
+            let newPosition = G.playerPosition[ctx.currentPlayer] + num;
+             
+            // Sends player back to start if player reaches end of board
+            if (newPosition > 21) {
+              newPosition = newPosition - 20
+            }
             let tempArray = G.cells[newPosition];
+
+            // Makes sure tempArray is an array
+            if (tempArray === undefined) {
+              tempArray = [];
+            }
             tempArray.push(ctx.currentPlayer)
 
             G.playerPosition[ctx.currentPlayer] = newPosition;
