@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FormGroup, Button, TextField, Select, MenuItem, Checkbox } from '@material-ui/core';
 
 const PlayerSetup = ({ playerInfos, playerID, moves, maxPlayers }) => {
@@ -18,7 +18,7 @@ const PlayerSetup = ({ playerInfos, playerID, moves, maxPlayers }) => {
         let arrayForLobby = [];
         
         // Loop through the maximum number of potential players and creates a spot for them on the lobby page
-        for (const [key, value] of Object.entries(maxPlayers)) {
+        for (const [key] of Object.entries(maxPlayers)) {
             arrayForLobby.push(
                 <FormGroup row key={key}>
                     <Checkbox
