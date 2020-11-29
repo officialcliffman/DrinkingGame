@@ -12,3 +12,51 @@
 .active-player{
   width:100%
 }
+
+.main-menu{
+  color: #b56118;
+  background-color: #7c76f2;
+  height: 300px;
+  width: 450px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid #000000;
+  padding: 10px;
+}
+
+.main-menu-header{
+text-align: center;
+text-shadow:
+-1px -1px 0 #000,
+1px -1px 0 #000,
+-1px 1px 0 #000,
+1px 1px 0 #000;
+}
+
+.main-menu-button{
+left: 38%;
+}
+
+.lobby-menu{
+  color: #b56118;
+  background-color: #7c76f2;
+  height: 400px;
+  width: 450px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid #000000;
+  padding: 10px;
+}
+
+.lobby-form{
+  margin-left: 29%;
+}
+
+.lobby-button{
+  left: 38%;
+  top: 3%;
+}
