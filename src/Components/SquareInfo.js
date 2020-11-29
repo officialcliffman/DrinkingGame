@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, IconButton, Card, CardMedia } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import AllImages from './AllImages';
 
 const SquareInfo = ({ newSquare, cells }) => {
   // State to open and close modal
@@ -18,7 +17,6 @@ const SquareInfo = ({ newSquare, cells }) => {
   const handleClose = () => {
     setOpen(false);
   };
-
   // The body of the modal
   const body = (
     <div style={{ backgroundColor: "white", width: "200px", height: "200px" }}>
@@ -27,7 +25,7 @@ const SquareInfo = ({ newSquare, cells }) => {
       </IconButton>
       <Card >
         <CardMedia
-          image={AllImages[newSquare - 1]}
+          image={'/Images/square'+ newSquare + '.jpg'}
           title="Square"
           style={{ height: 100 }}
           width="50"
