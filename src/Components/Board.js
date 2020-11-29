@@ -3,20 +3,22 @@ import Dice from './Dice';
 import SquareInfo from './SquareInfo'
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import PlayerSetup from './PlayerSetup';
+import '../App.css';
+
 export const TicTacToeBoard = (props) => {
 
 	// Triggers the rollDie move and passes the randomly generated number
 	const rollDoneCallback = (num) => {
 		props.moves.rollDie(num);
 	}
+	const colors = ['red', 'blue', 'black', 'green', 'purple', 'brown'];
 
 	// Assigns the players icons colors to match the ones selected in the player setup
 	const getPieces = (arrayOfPlayers) => {
-		const colors = ['red', 'blue', 'black', 'green', 'purple', 'brown'];
 		let tempArray = [];
 		if (arrayOfPlayers !== []) {
 			tempArray = arrayOfPlayers.map(player => {
-				
+
 				return <div style={{ color: colors[props.G.playerInfos[player].color] }}><DirectionsWalkIcon color={"inherit"} /></div>
 			}
 			)
@@ -24,6 +26,28 @@ export const TicTacToeBoard = (props) => {
 		return tempArray;
 	}
 
+	// Gets the class names depending on whether its the current player
+	const getPlayerClass = (player) => {
+		if (player.toString() === props.ctx.currentPlayer) {
+			return "users active-player"
+		} else {
+			return "users"
+		}
+	}
+
+	// This will create the player profiles that you see on the right of the screen
+	const getPlayers = () => {
+		let tempArray = [];
+		for (let i = 0; i < props.G.numPlayers; i++) {
+			tempArray.push(
+				<>
+					<div className={getPlayerClass(i)} style={{backgroundColor: colors[props.G.playerInfos[i].color]}}>
+						<p style={{ backgroundColor: 'inherit', marginLeft: '10px',color: 'white' }}>{props.G.playerInfos[i].name}</p>
+					</div>
+				</>)
+		}
+		return tempArray;
+	}
 
 	return (
 		<>
@@ -34,7 +58,11 @@ export const TicTacToeBoard = (props) => {
 				</>
 				:
 				<>
-				{/* If the game has started */}
+					{/* If the game has started */}
+					<div style={{ float: 'right', width: '200px' }}>
+						{getPlayers()}
+					</div>
+
 					<h1>Drinking Game</h1>
 					<table id="t01" border={1}>
 						<tr>
