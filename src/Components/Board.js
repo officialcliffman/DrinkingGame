@@ -16,7 +16,7 @@ export const TicTacToeBoard = (props) => {
 	// Assigns the players icons colors to match the ones selected in the player setup
 	const getPieces = (arrayOfPlayers) => {
 		let tempArray = [];
-		if (arrayOfPlayers !== []) {
+		if (arrayOfPlayers !== [] && arrayOfPlayers !== undefined) {
 			tempArray = arrayOfPlayers.map(player => {
 
 				return <div style={{ color: colors[props.G.playerInfos[player].color] }}><DirectionsWalkIcon color={"inherit"} /></div>
@@ -41,10 +41,40 @@ export const TicTacToeBoard = (props) => {
 		for (let i = 0; i < props.G.numPlayers; i++) {
 			tempArray.push(
 				<>
-					<div className={getPlayerClass(i)} style={{backgroundColor: colors[props.G.playerInfos[i].color]}}>
-						<p style={{ backgroundColor: 'inherit', marginLeft: '10px',color: 'white' }}>{props.G.playerInfos[i].name}</p>
+					<div className={getPlayerClass(i)} style={{ backgroundColor: colors[props.G.playerInfos[i].color] }}>
+						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white' }}>{props.G.playerInfos[i].name}</p>
 					</div>
 				</>)
+		}
+		return tempArray;
+	}
+
+	// Build Board
+	let numSquare = 55;
+	const getRow = (i) => {
+		let tempArray = [];
+		if (i % 2 === 0) {
+			numSquare -= 7;
+			for (let j = 0; j < 8; j++) {
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[numSquare])}</td>)
+				numSquare++;
+			}
+			numSquare -= 9;
+		}else{
+			for (let j = 0; j < 8; j++) {
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[numSquare])}</td>)
+				numSquare--;
+			}
+		}
+		return tempArray;
+	}
+
+	const getBoard = () => {
+		let tempArray = [];
+		for (let i = 0; i < 7; i++) {
+			tempArray.push(<tr>
+				{getRow(i)}
+			</tr>);
 		}
 		return tempArray;
 	}
@@ -58,6 +88,7 @@ export const TicTacToeBoard = (props) => {
 				</>
 				:
 				<>
+
 					{/* If the game has started */}
 					<div style={{ float: 'right', width: '200px' }}>
 						{getPlayers()}
@@ -65,34 +96,11 @@ export const TicTacToeBoard = (props) => {
 
 					<h1>Drinking Game</h1>
 					<table id="t01" border={1}>
-						<tr>
-							<td id="1" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[1])}</td>
-							<td id="2" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[2])}</td>
-							<td id="3" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[3])}</td>
-							<td id="4" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[4])}</td>
-							<td id="5" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[5])}</td>
-							<td id="6" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[6])}</td>
-							<td id="7" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[7])}</td>
-							<td id="8" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[8])}</td>
-							<td id="9" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[9])}</td>
-							<td id="10" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[10])}</td>
-						</tr>
-						<tr>
-							<td id="11" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[11])}</td>
-							<td id="12" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[12])}</td>
-							<td id="13" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[13])}</td>
-							<td id="14" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[14])}</td>
-							<td id="15" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[15])}</td>
-							<td id="16" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[16])}</td>
-							<td id="17" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[17])}</td>
-							<td id="18" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[18])}</td>
-							<td id="19" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[19])}</td>
-							<td id="20" style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[20])}</td>
-						</tr>
+						{getBoard()}
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells}/>
+					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells} />
 
 				</>
 			}

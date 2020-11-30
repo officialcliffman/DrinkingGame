@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 
-const boardSize = 21;
+const boardSize = 57;
 
 export const TicTacToe = {
   // Settings to setup before the game starts
@@ -39,6 +39,9 @@ export const TicTacToe = {
                 if (G.playerInfos.hasOwnProperty(ctx.playerID)) {
                   return;
                 }
+                let tempArray = G.cells[0];
+                tempArray.push(ctx.playerID);
+                G.cells[0] = tempArray;
                 // Assigns the player a default color that hasn't already been selected
                 const arrayOfColors = Array(6).fill(true);
                 let newColor;
@@ -153,7 +156,7 @@ export const TicTacToe = {
             let newPosition = G.playerPosition[ctx.currentPlayer] + num;
              
             // Sends player back to start if player reaches end of board
-            if (newPosition > 21) {
+            if (newPosition > boardSize) {
               newPosition = newPosition - 20
             }
             let tempArray = G.cells[newPosition];
