@@ -7,9 +7,16 @@ import '../App.css';
 
 export const TicTacToeBoard = (props) => {
 
+	// console.log(props)
+
 	// Triggers the rollDie move and passes the randomly generated number
 	const rollDoneCallback = (num) => {
-		props.moves.rollDie(num);
+		if((props.G.playerPosition[props.ctx.currentPlayer] + num) > 22){
+			props.moves.rollDie(num);
+		}else{
+			props.moves.rollDie(num);
+			props.events.endTurn();
+		}
 	}
 	const colors = ['red', 'blue', 'black', 'green', 'purple', 'brown'];
 
@@ -24,6 +31,12 @@ export const TicTacToeBoard = (props) => {
 			)
 		}
 		return tempArray;
+	}
+
+	// Handles the users choice on continuing at a checkpoint
+	const handleContinueClick = (cont) => {
+		props.moves.checkpointOneReached(cont);
+		props.events.endTurn();
 	}
 
 	// Gets the class names depending on whether its the current player
@@ -88,7 +101,6 @@ export const TicTacToeBoard = (props) => {
 				</>
 				:
 				<>
-
 					{/* If the game has started */}
 					<div style={{ float: 'right', width: '200px' }}>
 						{getPlayers()}
@@ -100,7 +112,7 @@ export const TicTacToeBoard = (props) => {
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells} />
+					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells} handleContinueClick={handleContinueClick} />
 
 				</>
 			}

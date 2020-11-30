@@ -8,7 +8,8 @@ export const TicTacToe = {
     cells: Array(boardSize).fill([]),
     playerPosition: Array(6).fill(0),
     playerInfos: {},
-    newSquare: 0
+    newSquare: 0,
+    nextSquare: 0
   }),
 
   // Name of the game, links up with the server
@@ -129,11 +130,11 @@ export const TicTacToe = {
 
       turn: {
         // Set one move per turn for the player
-        moveLimit: 1,
+        // moveLimit: 1,
 
         // Set the initial player as player 1 and go through the players afterwards
         order: {
-          first: (G, ctx) => 0 ,
+          first: (G, ctx) => 0,
           next: (G, ctx) => (ctx.playOrderPos + 1) % G.numPlayers,
         }
       },
@@ -154,24 +155,55 @@ export const TicTacToe = {
           // Set the new player position
           if (G.cells[playerPosition]) {
             let newPosition = G.playerPosition[ctx.currentPlayer] + num;
-             
+
             // Sends player back to start if player reaches end of board
-            if (newPosition > boardSize) {
-              newPosition = newPosition - 20
-            }
-            let tempArray = G.cells[newPosition];
+            if (newPosition > 22) {
+              let tempArray = G.cells[23];
+              tempArray.push(ctx.currentPlayer)
+              G.playerPosition[ctx.currentPlayer] = 23;
+              G.cells[23] = tempArray;
+              G.newSquare = 23;
+              G.nextSquare = newPosition;
+            } else {
 
-            // Makes sure tempArray is an array
-            if (tempArray === undefined) {
-              tempArray = [];
-            }
-            tempArray.push(ctx.currentPlayer)
+              let tempArray = G.cells[newPosition];
 
-            G.playerPosition[ctx.currentPlayer] = newPosition;
-            G.cells[newPosition] = tempArray;
-            G.newSquare=newPosition
+              // Makes sure tempArray is an array
+              if (tempArray === undefined) {
+                tempArray = [];
+              }
+              tempArray.push(ctx.currentPlayer)
+
+              G.playerPosition[ctx.currentPlayer] = newPosition;
+              G.cells[newPosition] = tempArray;
+              G.newSquare = newPosition
+            }
           }
         },
+        checkpointOneReached: (G, ctx, cont) => {
+          // Get the position of the current player
+          const playerPosition = G.playerPosition[ctx.currentPlayer];
+
+          // Remove the player from this square
+          let index = "";
+          index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
+          if (index > -1) {
+            G.cells[playerPosition].splice(index, 1);
+          }
+          if (cont) {
+            let tempArray = G.cells[G.nextSquare];
+            G.playerPosition[ctx.currentPlayer] = G.nextSquare;
+            tempArray.push(ctx.currentPlayer)
+            G.cells[G.nextSquare] = tempArray;
+            G.newSquare = G.nextSquare;
+          }else{
+            let tempArray = G.cells[0];
+            tempArray.push(ctx.currentPlayer)
+            G.playerPosition[ctx.currentPlayer] = 0;
+            G.cells[0] = tempArray;
+            G.newSquare = 0;
+          }
+        }
 
       },
     }
