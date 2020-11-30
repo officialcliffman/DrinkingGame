@@ -190,6 +190,8 @@ export const TicTacToe = {
           if (index > -1) {
             G.cells[playerPosition].splice(index, 1);
           }
+
+          // Change the players position based on whether they continue or not
           if (cont) {
             let tempArray = G.cells[G.nextSquare];
             G.playerPosition[ctx.currentPlayer] = G.nextSquare;
