@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Card, CardMedia } from '@material-ui/core';
+import { Modal, Card, CardMedia, CardContent, Button } from '@material-ui/core';
 
-const SquareInfo = ({ newSquare, cells }) => {
+const SquareInfo = ({ newSquare, cells, handleContinueClick }) => {
   // State to open and close modal
   const [open, setOpen] = useState(false);
 
@@ -21,13 +21,21 @@ const SquareInfo = ({ newSquare, cells }) => {
     <div style={{ backgroundColor: "white", width: "200px", height: "200px" }}>
       <Card >
         <CardMedia
-          image={'/Images/square'+ newSquare + '.jpg'}
+          image={'/Images/square' + newSquare + '.jpg'}
           title="Square"
           style={{ height: 100 }}
           width="50"
           component="img"
           alt={"Square " + newSquare + " image"}
         />
+        {newSquare === 23 ?
+          <CardContent>
+            <h2>Pay to continue?</h2>
+            <Button onClick={() => handleContinueClick(true)}>Yes</Button>
+            <Button onClick={() => handleContinueClick(false)}>No</Button>
+          </CardContent>
+          :
+          ""}
       </Card>
     </div>
   );
