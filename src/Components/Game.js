@@ -62,6 +62,7 @@ export const TicTacToe = {
                   name: `Player ${parseInt(ctx.playerID) + 1}`,
                   color: newColor,
                   ready: false,
+                  money: 5
                 };
 
               },

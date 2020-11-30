@@ -55,7 +55,8 @@ export const TicTacToeBoard = (props) => {
 			tempArray.push(
 				<>
 					<div className={getPlayerClass(i)} style={{ backgroundColor: colors[props.G.playerInfos[i].color] }}>
-						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white' }}>{props.G.playerInfos[i].name}</p>
+						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white', height:'5px' }}>{props.G.playerInfos[i].name}</p>
+						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white',  height:'5px' }}>${props.G.playerInfos[i].money}</p>
 					</div>
 				</>)
 		}
