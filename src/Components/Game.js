@@ -251,11 +251,10 @@ export const TicTacToe = {
           G.playerPosition[ctx.currentPlayer] = newPosition;
           G.cells[newPosition] = tempArray;
           G.newSquare = newPosition
-          G.closeAllModal = false;
+          // G.closeAllModal = true;
           let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
 
           // Remove one roll from their counter
-          currentPlayerInfo.rolls -= 1;
           G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
 
         },
