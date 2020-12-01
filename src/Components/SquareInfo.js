@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Card, CardMedia, CardContent, Button } from '@material-ui/core';
 
-const SquareInfo = ({ newSquare, cells, handleContinueClick }) => {
+const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID, playerMoney, playerCheckpoint }) => {
   // State to open and close modal
   const [open, setOpen] = useState(false);
-
+  
   // open modal when a player is moved
   useEffect(() => {
-    if (newSquare !== 0) {
+    if(playerPosition[currentPlayer] !== 0){
       setOpen(true)
     }
-  }, [newSquare, cells]);
+  }, [playerPosition, currentPlayer]);
 
   // Handle the close of the modal
   const handleClose = () => {
     setOpen(false);
+    if(currentPlayer === playerID){
+      handleSquareRule();
+    }
   };
+
+  // Check to see if user can afford to purchase checkpoint
+  const checkIfAffordable = () => {
+    if(newSquare === 23 && playerMoney < 10){
+      return true;
+    }else if(newSquare === 39 && playerMoney < 20){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   // The body of the modal
   const body = (
     <div style={{ backgroundColor: "white", width: "200px", height: "200px" }}>
@@ -28,23 +43,24 @@ const SquareInfo = ({ newSquare, cells, handleContinueClick }) => {
           component="img"
           alt={"Square " + newSquare + " image"}
         />
-        {newSquare === 23 ?
+
+        {/* If the player reaches a checkpoint square which they haven't purchased yet*/}
+        {(newSquare === 23 && playerCheckpoint === 0) || (newSquare === 39 && playerCheckpoint === 1) ?
           <CardContent>
             <h2>Pay to continue?</h2>
-            <Button onClick={() => handleContinueClick(true)}>Yes</Button>
-            <Button onClick={() => handleContinueClick(false)}>No</Button>
+            <Button disabled={checkIfAffordable()} onClick={() => handleContinueClick(true, newSquare)}>Yes</Button>
+            <Button onClick={() => handleContinueClick(false, newSquare)}>No</Button>
           </CardContent>
           :
           ""}
       </Card>
     </div>
   );
-
   return (
     <>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={open && closeAllModal}
+        onClose={() => handleClose()}
         style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         {body}

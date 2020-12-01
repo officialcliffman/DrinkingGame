@@ -1,0 +1,68 @@
+const Rules = [
+    {action: "doNothing", color: 'teal'},
+    {action: "doNothing", color: 'teal'},
+    {action: "money", amount:1, color: 'green'},
+    {action: "money", amount:2, color: 'green'},
+    {action: "move", amount:7, color: 'yellow'},
+    {action: "poison", color: 'brown'},
+    {action: "doNothing", color: 'teal'},
+    {action: "money", amount:1, color: 'green'},
+    {action: "money", amount:2, color: 'green'},
+    {action: "doNothing", color: 'teal'},
+    {action: "move", amount:-5, color: 'yellow'},
+    {action: "doNothing", color: 'teal'},
+    {action: "move", amount:-7, color: 'yellow'},
+    {action: "double", color: 'pink'},
+    {action: "doNothing", color: 'teal'},
+    {action: "doNothing", color: 'teal'}, // needs changing
+    {action: "money", amount:1, color: 'green'},
+    {action: "money", amount:2, color: 'green'},
+    {action: "doNothing", color: 'teal'}, // needs changing
+    {action: "doNothing", color: 'teal'},
+    {action: "doNothing", color: 'teal'}, // needs changing
+    {action: "doNothing", color: 'teal'}, // needs changing
+    {action: "doNothing", color: 'teal'}, // needs changing
+    {action: "doNothing", color: 'orange'}, // 24 Checkpoint square
+    {action: "game", color: '#f10af5', game: 'busStop'}, // ------------------------------------------------------------------------------------
+    {action: "money", amount:1, color: 'green'},
+    {action: "money", amount:3, color: 'green'},
+    {action: "doNothing", color: 'teal'}, 
+    {action: "doNothing", color: 'teal'}, 
+    {action: "move", amount:7, color: 'yellow'},
+    {action: "doNothing", color: 'teal'},
+    {action: "poison", color: 'brown'},
+    {action: "doNothing", color: 'teal'}, 
+    {action: "money", amount:2, color: 'green'},
+    {action: "money", amount:3, color: 'green'},
+    {action: "doNothing", color: 'teal'},
+    {action: "doNothing", color: 'teal'}, 
+    {action: "move", amount:-9, color: 'yellow'}, 
+    {action: "doNothing", color: 'teal'}, 
+    {action: "doNothing", color: 'orange'}, 
+    {action: "doNothing", color: 'teal'},
+    {action: "money", amount:2, color: 'green'},
+    {action: "money", amount:4, color: 'green'},
+    {action: "doNothing", color: 'teal'}, 
+    {action: "move", amount:2, color: 'yellow'}, 
+    {action: "doNothing", color: 'teal'},
+    {action: "doNothing", color: 'teal'}, 
+    {action: "move", amount:-4, color: 'yellow'}, 
+    {action: "doNothing", color: 'teal'}, 
+    {action: "money", amount:3, color: 'green'},
+    {action: "money", amount:4, color: 'green'},
+    {action: "poison", color: 'brown'},
+    {action: "doNothing", color: 'teal'}, 
+    {action: "doNothing", color: 'teal'}, 
+    {action: "doNothing", color: 'teal'}, 
+    {action: "doNothing", color: 'orange'},
+    // {action: "doNothing", color: 'cyan'}, 
+    // {action: "money", amount: -1, color: 'red'}, 
+    // {action: "money", amount: -2, color: 'red'},
+    // {action: "money", amount: -3, color: 'red'},
+    // {action: "money", amount: -1, color: 'red'},
+    // {action: "money", amount: -2, color: 'red'},
+    // {action: "money", amount: -1, color: 'red'},
+    
+];
+
+export default Rules;

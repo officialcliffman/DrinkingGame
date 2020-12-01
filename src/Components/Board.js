@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Dice from './Dice';
 import SquareInfo from './SquareInfo'
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import PlayerSetup from './PlayerSetup';
+import Rules from './Rules';
 import '../App.css';
 
 export const TicTacToeBoard = (props) => {
 
-	// console.log(props)
+	// Checks the rules for each square by action -- see Rules.js
+	const handleSquareRule = () => {
+		const playerPosition = props.G.playerPosition[props.ctx.currentPlayer];
+		if (playerPosition !== undefined) {
+			if (Rules[playerPosition].action === "doNothing") {
+				props.moves.doNothing();
+			} else if (Rules[playerPosition].action === "move") {
+				props.moves.move(Rules[playerPosition].amount);
+			} else if (Rules[playerPosition].action === "money") {
+				props.moves.money(Rules[playerPosition].amount);
+			} else {
+				props.moves.doNothing();
+			}
+		}
+	}
 
 	// Triggers the rollDie move and passes the randomly generated number
 	const rollDoneCallback = (num) => {
-		if((props.G.playerPosition[props.ctx.currentPlayer] + num) > 22){
-			props.moves.rollDie(num);
-		}else{
-			props.moves.rollDie(num);
-			props.events.endTurn();
-		}
+		props.moves.rollDie(num);
 	}
 	const colors = ['red', 'blue', 'black', 'green', 'purple', 'brown'];
 
@@ -34,9 +44,8 @@ export const TicTacToeBoard = (props) => {
 	}
 
 	// Handles the users choice on continuing at a checkpoint
-	const handleContinueClick = (cont) => {
-		props.moves.checkpointOneReached(cont);
-		props.events.endTurn();
+	const handleContinueClick = (cont, square) => {
+		props.moves.checkpointReached(cont, square);
 	}
 
 	// Gets the class names depending on whether its the current player
@@ -55,8 +64,8 @@ export const TicTacToeBoard = (props) => {
 			tempArray.push(
 				<>
 					<div className={getPlayerClass(i)} style={{ backgroundColor: colors[props.G.playerInfos[i].color] }}>
-						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white', height:'5px' }}>{props.G.playerInfos[i].name}</p>
-						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white',  height:'5px' }}>${props.G.playerInfos[i].money}</p>
+						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white', height: '5px' }}>{props.G.playerInfos[i].name}</p>
+						<p style={{ backgroundColor: 'inherit', marginLeft: '10px', color: 'white', height: '5px' }}>${props.G.playerInfos[i].money}</p>
 					</div>
 				</>)
 		}
@@ -70,13 +79,13 @@ export const TicTacToeBoard = (props) => {
 		if (i % 2 === 0) {
 			numSquare -= 7;
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare++;
 			}
 			numSquare -= 9;
-		}else{
+		} else {
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare--;
 			}
 		}
@@ -113,7 +122,16 @@ export const TicTacToeBoard = (props) => {
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo newSquare={props.G.newSquare} cells={props.G.cells} handleContinueClick={handleContinueClick} />
+					<SquareInfo 
+					newSquare={props.G.newSquare}
+					 playerPosition={props.G.playerPosition} 
+					 handleContinueClick={handleContinueClick} 
+					 handleSquareRule={handleSquareRule} 
+					 currentPlayer={props.ctx.currentPlayer} 
+					 closeAllModal={props.G.closeAllModal} 
+					 playerID={props.playerID} 
+					 playerMoney={props.G.playerInfos[props.ctx.currentPlayer].money}
+					 playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint} />
 
 				</>
 			}
