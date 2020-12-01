@@ -44,9 +44,8 @@ export const TicTacToeBoard = (props) => {
 	}
 
 	// Handles the users choice on continuing at a checkpoint
-	const handleContinueClick = (cont) => {
-		props.moves.checkpointOneReached(cont);
-		// props.events.endTurn();
+	const handleContinueClick = (cont, square) => {
+		props.moves.checkpointReached(cont, square);
 	}
 
 	// Gets the class names depending on whether its the current player
@@ -123,7 +122,16 @@ export const TicTacToeBoard = (props) => {
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo newSquare={props.G.newSquare} playerPosition={props.G.playerPosition} handleContinueClick={handleContinueClick} handleSquareRule={handleSquareRule} currentPlayer={props.ctx.currentPlayer} closeAllModal={props.G.closeAllModal} playerID={props.playerID} />
+					<SquareInfo 
+					newSquare={props.G.newSquare}
+					 playerPosition={props.G.playerPosition} 
+					 handleContinueClick={handleContinueClick} 
+					 handleSquareRule={handleSquareRule} 
+					 currentPlayer={props.ctx.currentPlayer} 
+					 closeAllModal={props.G.closeAllModal} 
+					 playerID={props.playerID} 
+					 playerMoney={props.G.playerInfos[props.ctx.currentPlayer].money}
+					 playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint} />
 
 				</>
 			}

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Card, CardMedia, CardContent, Button } from '@material-ui/core';
-import { CheckBoxTwoTone } from '@material-ui/icons';
-import createMixins from '@material-ui/core/styles/createMixins';
 
-const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID }) => {
+const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID, playerMoney, playerCheckpoint }) => {
   // State to open and close modal
   const [open, setOpen] = useState(false);
   
@@ -12,7 +10,7 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
     if(playerPosition[currentPlayer] !== 0){
       setOpen(true)
     }
-  }, [playerPosition[currentPlayer]]);
+  }, [playerPosition, currentPlayer]);
 
   // Handle the close of the modal
   const handleClose = () => {
@@ -21,6 +19,17 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
       handleSquareRule();
     }
   };
+
+  // Check to see if user can afford to purchase checkpoint
+  const checkIfAffordable = () => {
+    if(newSquare === 23 && playerMoney < 10){
+      return true;
+    }else if(newSquare === 39 && playerMoney < 20){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   // The body of the modal
   const body = (
@@ -34,11 +43,13 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
           component="img"
           alt={"Square " + newSquare + " image"}
         />
-        {newSquare === 23 ?
+
+        {/* If the player reaches a checkpoint square which they haven't purchased yet*/}
+        {(newSquare === 23 && playerCheckpoint === 0) || (newSquare === 39 && playerCheckpoint === 1) ?
           <CardContent>
             <h2>Pay to continue?</h2>
-            <Button onClick={() => handleContinueClick(true)}>Yes</Button>
-            <Button onClick={() => handleContinueClick(false)}>No</Button>
+            <Button disabled={checkIfAffordable()} onClick={() => handleContinueClick(true, newSquare)}>Yes</Button>
+            <Button onClick={() => handleContinueClick(false, newSquare)}>No</Button>
           </CardContent>
           :
           ""}
