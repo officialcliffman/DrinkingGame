@@ -1,8 +1,8 @@
 // src/server.js
 const { Server, FlatFile } = require('boardgame.io/server');
-const { TicTacToe } = require('./Game');
+const { DrinkingGame } = require('./Game');
 
-const server = Server({ games: [TicTacToe],
+const server = Server({ games: [DrinkingGame],
     db: new FlatFile({
         dir: '/storage/directory',
         logging: (true),
