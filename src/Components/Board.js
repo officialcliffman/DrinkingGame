@@ -80,13 +80,13 @@ export const TicTacToeBoard = (props) => {
 		if (i % 2 === 0) {
 			numSquare -= 7;
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare++;
 			}
 			numSquare -= 9;
 		} else {
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100 }}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare--;
 			}
 		}
