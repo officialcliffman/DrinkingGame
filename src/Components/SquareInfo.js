@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Card, CardMedia, CardContent, Button } from '@material-ui/core';
+import { CheckBoxTwoTone } from '@material-ui/icons';
+import createMixins from '@material-ui/core/styles/createMixins';
 
-const SquareInfo = ({ newSquare, cells, handleContinueClick }) => {
+const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID }) => {
   // State to open and close modal
   const [open, setOpen] = useState(false);
-
+  
   // open modal when a player is moved
   useEffect(() => {
-    if (newSquare !== 0) {
+    if(playerPosition[currentPlayer] !== 0){
       setOpen(true)
     }
-  }, [newSquare, cells]);
+  }, [playerPosition[currentPlayer]]);
 
   // Handle the close of the modal
   const handleClose = () => {
     setOpen(false);
+    if(currentPlayer === playerID){
+      handleSquareRule();
+    }
   };
+
   // The body of the modal
   const body = (
     <div style={{ backgroundColor: "white", width: "200px", height: "200px" }}>
@@ -39,12 +45,11 @@ const SquareInfo = ({ newSquare, cells, handleContinueClick }) => {
       </Card>
     </div>
   );
-
   return (
     <>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={open && closeAllModal}
+        onClose={() => handleClose()}
         style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         {body}

@@ -9,7 +9,8 @@ export const TicTacToe = {
     playerPosition: Array(6).fill(0),
     playerInfos: {},
     newSquare: 0,
-    nextSquare: 0
+    nextSquare: 0,
+    closeAllModal: false
   }),
 
   // Name of the game, links up with the server
@@ -62,7 +63,9 @@ export const TicTacToe = {
                   name: `Player ${parseInt(ctx.playerID) + 1}`,
                   color: newColor,
                   ready: false,
-                  money: 5
+                  money: 5,
+                  rolls: 0,
+                  double: false
                 };
 
               },
@@ -130,8 +133,23 @@ export const TicTacToe = {
     main: {
 
       turn: {
-        // Set one move per turn for the player
-        // moveLimit: 1,
+        onBegin: (G, ctx) => {
+          let playerInfos = G.playerInfos[ctx.currentPlayer];
+          if(playerInfos.double === true){
+            playerInfos.rolls = 2;
+            playerInfos.double = false;
+          }else{
+            playerInfos.rolls = 1;
+          }
+          G.playerInfos[ctx.currentPlayer] = playerInfos;
+          G.closeAllModal = false;
+        },
+        // Ends the turn if this returns true.
+        endIf: (G, ctx) => G.playerInfos[ctx.currentPlayer].rolls === 0,
+
+        onEnd: (G, ctx) => {
+          G.closeAllModal = false;
+        },
 
         // Set the initial player as player 1 and go through the players afterwards
         order: {
@@ -179,6 +197,7 @@ export const TicTacToe = {
               G.cells[newPosition] = tempArray;
               G.newSquare = newPosition
             }
+            G.closeAllModal = true;
           }
         },
         checkpointOneReached: (G, ctx, cont) => {
@@ -199,16 +218,72 @@ export const TicTacToe = {
             tempArray.push(ctx.currentPlayer)
             G.cells[G.nextSquare] = tempArray;
             G.newSquare = G.nextSquare;
-          }else{
+          } else {
             let tempArray = G.cells[0];
             tempArray.push(ctx.currentPlayer)
             G.playerPosition[ctx.currentPlayer] = 0;
             G.cells[0] = tempArray;
             G.newSquare = 0;
           }
-        }
+        },
+        // If the player lands on a square which moves them
+        move: (G, ctx, amount) => {
+          // Get the position of the current player
+          const playerPosition = G.playerPosition[ctx.currentPlayer];
 
-      },
+          // Remove the player from this square
+          let index = "";
+          index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
+          if (index > -1) {
+            G.cells[playerPosition].splice(index, 1);
+          }
+
+          // Move the player to the new square
+          let newPosition = G.playerPosition[ctx.currentPlayer] + amount;
+          let tempArray = G.cells[newPosition];
+
+          // Makes sure tempArray is an array
+          if (tempArray === undefined) {
+            tempArray = [];
+          }
+          tempArray.push(ctx.currentPlayer)
+
+          G.playerPosition[ctx.currentPlayer] = newPosition;
+          G.cells[newPosition] = tempArray;
+          G.newSquare = newPosition
+          G.closeAllModal = false;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Remove one roll from their counter
+          currentPlayerInfo.rolls -= 1;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+
+        },
+
+        // If the players lands on a square which alters their money
+        money: (G, ctx, amount) => {
+          G.closeAllModal = false;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Adds the money to players money
+          currentPlayerInfo.money += amount;
+
+          // Remove one roll from their counter
+          currentPlayerInfo.rolls -= 1;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+
+        // If the player lands on a square which doesn't require functionality
+        doNothing: (G, ctx) => {
+          G.closeAllModal = false;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Remove one roll from their counter
+          currentPlayerInfo.rolls -= 1;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+
+        }
+      }
     }
   },
 
