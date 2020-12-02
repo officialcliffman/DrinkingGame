@@ -18,7 +18,7 @@ const App = () => {
      * Creates a match on the lobbyClient and returns a matchID
      */
     const createMatch = async () => {
-        const { matchID } = await lobbyClient.createMatch("TicTacToe", {
+        const { matchID } = await lobbyClient.createMatch("DrinkingGame", {
             numPlayers: 6,
         })
         // Changes URL to end with /match/matchID
@@ -31,7 +31,7 @@ const App = () => {
 
     const joinMatch = async () => {
         try {
-            const match = await lobbyClient.getMatch('TicTacToe', joinMatchID);
+            const match = await lobbyClient.getMatch('DrinkingGame', joinMatchID);
             window.location.href = `/match/${joinMatchID}`;
             setJoinMatchID("");
         } catch {

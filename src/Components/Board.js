@@ -6,7 +6,7 @@ import PlayerSetup from './PlayerSetup';
 import Rules from './Rules';
 import '../App.css';
 
-export const TicTacToeBoard = (props) => {
+export const DrinkingGameBoard = (props) => {
 
 	// Checks the rules for each square by action -- see Rules.js
 	const handleSquareRule = () => {
@@ -18,6 +18,8 @@ export const TicTacToeBoard = (props) => {
 				props.moves.move(Rules[playerPosition].amount);
 			} else if (Rules[playerPosition].action === "money") {
 				props.moves.money(Rules[playerPosition].amount);
+			} else if (Rules[playerPosition].action === "double") {
+				props.moves.double();
 			} else {
 				props.moves.doNothing();
 			}
@@ -44,9 +46,8 @@ export const TicTacToeBoard = (props) => {
 	}
 
 	// Handles the users choice on continuing at a checkpoint
-	const handleContinueClick = (cont) => {
-		props.moves.checkpointOneReached(cont);
-		// props.events.endTurn();
+	const handleContinueClick = (cont, square) => {
+		props.moves.checkpointReached(cont, square);
 	}
 
 	// Gets the class names depending on whether its the current player
@@ -80,13 +81,13 @@ export const TicTacToeBoard = (props) => {
 		if (i % 2 === 0) {
 			numSquare -= 7;
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color }}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare++;
 			}
 			numSquare -= 9;
 		} else {
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color }}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare--;
 			}
 		}
@@ -123,7 +124,16 @@ export const TicTacToeBoard = (props) => {
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo newSquare={props.G.newSquare} playerPosition={props.G.playerPosition} handleContinueClick={handleContinueClick} handleSquareRule={handleSquareRule} currentPlayer={props.ctx.currentPlayer} closeAllModal={props.G.closeAllModal} playerID={props.playerID} />
+					<SquareInfo
+						newSquare={props.G.newSquare}
+						playerPosition={props.G.playerPosition}
+						handleContinueClick={handleContinueClick}
+						handleSquareRule={handleSquareRule}
+						currentPlayer={props.ctx.currentPlayer}
+						closeAllModal={props.G.closeAllModal}
+						playerID={props.playerID}
+						playerMoney={props.G.playerInfos[props.ctx.currentPlayer].money}
+						playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint} />
 
 				</>
 			}

@@ -1,5 +1,5 @@
-import { TicTacToeBoard } from './Board';
-import { TicTacToe } from './Game';
+import { DrinkingGameBoard } from './Board';
+import { DrinkingGame } from './Game';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -17,14 +17,14 @@ const MainGame = ({ matchID, lobbyClient }) => {
 
         // Creates the game client
         const DrinkingGameClient = Client({
-            game: TicTacToe,
-            board: TicTacToeBoard,
+            game: DrinkingGame,
+            board: DrinkingGameBoard,
             numPlayers: 6,
             multiplayer: SocketIO({ server: 'localhost:8000' }),
         });
 
         // Gets the match that matches the ID and checks if the user has already joined this game, if they have assign playerID and playerCredentials
-        const match = await lobbyClient.getMatch('TicTacToe', matchID);
+        const match = await lobbyClient.getMatch('DrinkingGame', matchID);
         let playerID = null;
         let playerCredentials = null;
         playerID = window.localStorage.getItem(`playerID for matchID=${matchID}`);
@@ -47,7 +47,7 @@ const MainGame = ({ matchID, lobbyClient }) => {
             }
 
             // Join the game with the newly assigned playerID
-            const resp = await lobbyClient.joinMatch("TicTacToe", matchID, {
+            const resp = await lobbyClient.joinMatch("DrinkingGame", matchID, {
                 playerID,
                 playerName: playerID,
             });

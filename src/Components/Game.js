@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 
 const boardSize = 57;
 
-export const TicTacToe = {
+export const DrinkingGame = {
   // Settings to setup before the game starts
   setup: () => ({
     cells: Array(boardSize).fill([]),
@@ -14,7 +14,7 @@ export const TicTacToe = {
   }),
 
   // Name of the game, links up with the server
-  name: "TicTacToe",
+  name: "DrinkingGame",
 
   // There are two phases, one for setup which is the lobby screen and the second is the main game
   phases: {
@@ -65,7 +65,8 @@ export const TicTacToe = {
                   ready: false,
                   money: 5,
                   rolls: 0,
-                  double: false
+                  double: false,
+                  checkpoint: 0
                 };
 
               },
@@ -135,10 +136,10 @@ export const TicTacToe = {
       turn: {
         onBegin: (G, ctx) => {
           let playerInfos = G.playerInfos[ctx.currentPlayer];
-          if(playerInfos.double === true){
+          if (playerInfos.double === true) {
             playerInfos.rolls = 2;
             playerInfos.double = false;
-          }else{
+          } else {
             playerInfos.rolls = 1;
           }
           G.playerInfos[ctx.currentPlayer] = playerInfos;
@@ -176,12 +177,19 @@ export const TicTacToe = {
             let newPosition = G.playerPosition[ctx.currentPlayer] + num;
 
             // Sends player back to start if player reaches end of board
-            if (newPosition > 22) {
+            if (newPosition > 22 && G.playerInfos[ctx.currentPlayer].checkpoint === 0) {
               let tempArray = G.cells[23];
               tempArray.push(ctx.currentPlayer)
               G.playerPosition[ctx.currentPlayer] = 23;
               G.cells[23] = tempArray;
               G.newSquare = 23;
+              G.nextSquare = newPosition;
+            } else if (newPosition > 38 && G.playerInfos[ctx.currentPlayer].checkpoint === 1) {
+              let tempArray = G.cells[39];
+              tempArray.push(ctx.currentPlayer)
+              G.playerPosition[ctx.currentPlayer] = 39;
+              G.cells[39] = tempArray;
+              G.newSquare = 39;
               G.nextSquare = newPosition;
             } else {
 
@@ -200,91 +208,130 @@ export const TicTacToe = {
             G.closeAllModal = true;
           }
         },
-        checkpointOneReached: (G, ctx, cont) => {
+        checkpointReached: (G, ctx, cont, square) => {
           // Get the position of the current player
           const playerPosition = G.playerPosition[ctx.currentPlayer];
-
-          // Remove the player from this square
-          let index = "";
-          index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
-          if (index > -1) {
-            G.cells[playerPosition].splice(index, 1);
-          }
-
-          // Change the players position based on whether they continue or not
-          if (cont) {
-            let tempArray = G.cells[G.nextSquare];
-            G.playerPosition[ctx.currentPlayer] = G.nextSquare;
-            tempArray.push(ctx.currentPlayer)
-            G.cells[G.nextSquare] = tempArray;
-            G.newSquare = G.nextSquare;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+          let checkpoint = "";
+          if (square === 23) {
+            checkpoint = "one";
           } else {
-            let tempArray = G.cells[0];
-            tempArray.push(ctx.currentPlayer)
-            G.playerPosition[ctx.currentPlayer] = 0;
-            G.cells[0] = tempArray;
-            G.newSquare = 0;
+            checkpoint = "two";
           }
-        },
-        // If the player lands on a square which moves them
-        move: (G, ctx, amount) => {
-          // Get the position of the current player
-          const playerPosition = G.playerPosition[ctx.currentPlayer];
-
           // Remove the player from this square
           let index = "";
           index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
           if (index > -1) {
             G.cells[playerPosition].splice(index, 1);
           }
-
-          // Move the player to the new square
-          let newPosition = G.playerPosition[ctx.currentPlayer] + amount;
-          let tempArray = G.cells[newPosition];
-
-          // Makes sure tempArray is an array
-          if (tempArray === undefined) {
-            tempArray = [];
+          if (checkpoint === "one") {
+            // Change the players position based on whether they continue or not
+            if (cont) {
+              let tempArray = G.cells[G.nextSquare];
+              G.playerPosition[ctx.currentPlayer] = G.nextSquare;
+              tempArray.push(ctx.currentPlayer)
+              G.cells[G.nextSquare] = tempArray;
+              G.newSquare = G.nextSquare;
+              currentPlayerInfo.money -= 10;
+              currentPlayerInfo.checkpoint = 1;
+              G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+            } else {
+              let tempArray = G.cells[0];
+              tempArray.push(ctx.currentPlayer)
+              G.playerPosition[ctx.currentPlayer] = 0;
+              G.cells[0] = tempArray;
+              G.newSquare = 0;
+            }
+          } else if (checkpoint === "two") {
+            if (cont) {
+              let tempArray = G.cells[G.nextSquare];
+              G.playerPosition[ctx.currentPlayer] = G.nextSquare;
+              tempArray.push(ctx.currentPlayer)
+              G.cells[G.nextSquare] = tempArray;
+              G.newSquare = G.nextSquare;
+              currentPlayerInfo.money -= 20;
+              currentPlayerInfo.checkpoint = 2;
+              G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+            } else {
+              let tempArray = G.cells[23];
+              tempArray.push(ctx.currentPlayer)
+              G.playerPosition[ctx.currentPlayer] = 23;
+              G.cells[23] = tempArray;
+              G.newSquare = 23;
+            }
           }
-          tempArray.push(ctx.currentPlayer)
-
-          G.playerPosition[ctx.currentPlayer] = newPosition;
-          G.cells[newPosition] = tempArray;
-          G.newSquare = newPosition
-          // G.closeAllModal = true;
-          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
-
-          // Remove one roll from their counter
-          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
-
         },
 
-        // If the players lands on a square which alters their money
-        money: (G, ctx, amount) => {
-          G.closeAllModal = false;
-          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+      // If the player lands on a square which moves them
+      move: (G, ctx, amount) => {
+        // Get the position of the current player
+        const playerPosition = G.playerPosition[ctx.currentPlayer];
 
-          // Adds the money to players money
-          currentPlayerInfo.money += amount;
-
-          // Remove one roll from their counter
-          currentPlayerInfo.rolls -= 1;
-          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
-        },
-
-        // If the player lands on a square which doesn't require functionality
-        doNothing: (G, ctx) => {
-          G.closeAllModal = false;
-          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
-
-          // Remove one roll from their counter
-          currentPlayerInfo.rolls -= 1;
-          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
-
+        // Remove the player from this square
+        let index = "";
+        index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
+        if (index > -1) {
+          G.cells[playerPosition].splice(index, 1);
         }
+
+        // Move the player to the new square
+        let newPosition = G.playerPosition[ctx.currentPlayer] + amount;
+        let tempArray = G.cells[newPosition];
+
+        // Makes sure tempArray is an array
+        if (tempArray === undefined) {
+          tempArray = [];
+        }
+        tempArray.push(ctx.currentPlayer)
+
+        G.playerPosition[ctx.currentPlayer] = newPosition;
+        G.cells[newPosition] = tempArray;
+        G.newSquare = newPosition
+        // G.closeAllModal = true;
+        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+        // Remove one roll from their counter
+        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+
+      },
+
+      // If the players lands on a square which alters their money
+      money: (G, ctx, amount) => {
+        G.closeAllModal = false;
+        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+        // Adds the money to players money
+        currentPlayerInfo.money += amount;
+
+        // Remove one roll from their counter
+        currentPlayerInfo.rolls -= 1;
+        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+      },
+
+      // If the player lands on a square which doesn't require functionality
+      doNothing: (G, ctx) => {
+        G.closeAllModal = false;
+        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+        // Remove one roll from their counter
+        currentPlayerInfo.rolls -= 1;
+        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+      },
+
+      // If the player lands on a square which gives you a double roll
+      double: (G, ctx) => {
+        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+        // Adds one roll to their next turn
+        currentPlayerInfo.rolls -=1;
+        currentPlayerInfo.double = true;
+        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
       }
+
+
     }
-  },
+  }
+},
 
   // Start the game
   startGame: (G, ctx) => {
