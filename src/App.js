@@ -7,10 +7,10 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css"
 
 //  For deployment
-// const { protocol, hostname, port } = window.location;
-// const server = `${protocol}//${hostname}:${port}`;
-// For local
-const server = "http://localhost:8000";
+const { protocol, hostname, port } = window.location;
+const server = `${protocol}//${hostname}:${port}`;
+// // For local
+// const server = "http://localhost:8000";
 const App = () => {
     const [joinMatchID, setJoinMatchID] = useState("");
     const [showError, setShowError] = useState(false);
