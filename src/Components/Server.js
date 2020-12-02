@@ -2,9 +2,9 @@
 import { Server } from 'boardgame.io/server';
 import path from 'path';
 import serve from 'koa-static';
-import { TicTacToe } from './Game';
+import { DrinkingGame } from './Game';
 
-const server = Server({ games: [TicTacToe] });
+const server = Server({ games: [DrinkingGame] });
 const PORT = process.env.PORT || 8000;
 
 // Build path relative to the server.js file
