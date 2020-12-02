@@ -8,6 +8,13 @@ import '../App.css';
 
 export const DrinkingGameBoard = (props) => {
 
+	// Checks to see if the current player is poisoned
+	useEffect(() => {
+		if (props.G.playerInfos[props.ctx.currentPlayer] !== undefined && props.G.playerInfos[props.ctx.currentPlayer].poison) {
+			props.moves.rollDie(0);
+		};
+	}, [props.ctx.currentPlayer]);
+
 	// Checks the rules for each square by action -- see Rules.js
 	const handleSquareRule = () => {
 		const playerPosition = props.G.playerPosition[props.ctx.currentPlayer];
@@ -20,6 +27,8 @@ export const DrinkingGameBoard = (props) => {
 				props.moves.money(Rules[playerPosition].amount);
 			} else if (Rules[playerPosition].action === "double") {
 				props.moves.double();
+			} else if (Rules[playerPosition].action === "poison") {
+				props.moves.poison(Rules[playerPosition].amount);
 			} else {
 				props.moves.doNothing();
 			}
@@ -48,6 +57,12 @@ export const DrinkingGameBoard = (props) => {
 	// Handles the users choice on continuing at a checkpoint
 	const handleContinueClick = (cont, square) => {
 		props.moves.checkpointReached(cont, square);
+	}
+
+	// Handle the users choice on the poison squares
+	const handlePoisonButton = () => {
+			props.moves.endPoison()
+
 	}
 
 	// Gets the class names depending on whether its the current player
@@ -133,7 +148,10 @@ export const DrinkingGameBoard = (props) => {
 						closeAllModal={props.G.closeAllModal}
 						playerID={props.playerID}
 						playerMoney={props.G.playerInfos[props.ctx.currentPlayer].money}
-						playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint} />
+						playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint}
+						poison={props.G.playerInfos[props.ctx.currentPlayer].poison}
+						handlePoisonButton={handlePoisonButton}
+					/>
 
 				</>
 			}

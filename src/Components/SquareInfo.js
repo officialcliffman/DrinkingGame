@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Card, CardMedia, CardContent, Button } from '@material-ui/core';
 
-const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID, playerMoney, playerCheckpoint }) => {
+const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID, playerMoney, playerCheckpoint, poison, handlePoisonButton }) => {
     // State to open and close modal
     const [open, setOpen] = useState(false);
 
@@ -20,11 +20,20 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
         }
     }
 
+    // Check to see if the player is poisoned
+    const checkIfPoisoned = () => {
+        if (poison && playerID === currentPlayer) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Checks to see if the user should be able to escape this square
     const checkIfEscapeDisabled = () => {
-        if(playerID === currentPlayer && ((newSquare === 23 && playerCheckpoint === 0) || (newSquare === 39 && playerCheckpoint === 1)) ){
+        if (playerID === currentPlayer && ((newSquare === 23 && playerCheckpoint === 0) || (newSquare === 39 && playerCheckpoint === 1))) {
             return true
-        }else{
+        } else {
             return false;
         }
     }
@@ -62,6 +71,15 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
                     </CardContent>
                     :
                     ""}
+                {/* If the player is poisoned*/}
+                {checkIfPoisoned() ?
+                    <CardContent>
+                        <h2>Have you chugged yet?</h2>
+                        <Button onClick={() => handlePoisonButton()}>Yes</Button>
+                        <Button onClick={() => handleClose()}>No</Button>
+                    </CardContent>
+                    :
+                    ""}
             </Card>
         </div>
     );
@@ -71,8 +89,8 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
                 open={open && closeAllModal}
                 onClose={() => handleClose()}
                 style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-                disableBackdropClick={checkIfEscapeDisabled()}
-                disableEscapeKeyDown={checkIfEscapeDisabled()}
+                disableBackdropClick={checkIfEscapeDisabled() || checkIfPoisoned()}
+                disableEscapeKeyDown={checkIfEscapeDisabled() || checkIfPoisoned()}
             >
                 {body}
             </Modal>

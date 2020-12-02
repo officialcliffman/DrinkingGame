@@ -66,7 +66,8 @@ export const DrinkingGame = {
                   money: 5,
                   rolls: 0,
                   double: false,
-                  checkpoint: 0
+                  checkpoint: 0,
+                  poison: false
                 };
 
               },
@@ -262,76 +263,99 @@ export const DrinkingGame = {
           }
         },
 
-      // If the player lands on a square which moves them
-      move: (G, ctx, amount) => {
-        // Get the position of the current player
-        const playerPosition = G.playerPosition[ctx.currentPlayer];
+        // If the player lands on a square which moves them
+        move: (G, ctx, amount) => {
+          // Get the position of the current player
+          const playerPosition = G.playerPosition[ctx.currentPlayer];
 
-        // Remove the player from this square
-        let index = "";
-        index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
-        if (index > -1) {
-          G.cells[playerPosition].splice(index, 1);
+          // Remove the player from this square
+          let index = "";
+          index = G.cells[playerPosition].indexOf(ctx.currentPlayer);
+          if (index > -1) {
+            G.cells[playerPosition].splice(index, 1);
+          }
+
+          // Move the player to the new square
+          let newPosition = G.playerPosition[ctx.currentPlayer] + amount;
+          let tempArray = G.cells[newPosition];
+
+          // Makes sure tempArray is an array
+          if (tempArray === undefined) {
+            tempArray = [];
+          }
+          tempArray.push(ctx.currentPlayer)
+
+          G.playerPosition[ctx.currentPlayer] = newPosition;
+          G.cells[newPosition] = tempArray;
+          G.newSquare = newPosition
+          // G.closeAllModal = true;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Remove one roll from their counter
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+
+        },
+
+        // If the players lands on a square which alters their money
+        money: (G, ctx, amount) => {
+          G.closeAllModal = false;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Adds the money to players money
+          currentPlayerInfo.money += amount;
+
+          // Remove one roll from their counter
+          currentPlayerInfo.rolls -= 1;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+
+        // If the player lands on a square which doesn't require functionality
+        doNothing: (G, ctx) => {
+          G.closeAllModal = false;
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Remove one roll from their counter
+          currentPlayerInfo.rolls -= 1;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+
+        // If the player lands on a square which gives you a double roll
+        double: (G, ctx) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Adds one roll to their next turn
+          currentPlayerInfo.rolls -= 1;
+          currentPlayerInfo.double = true;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+
+        // If the player lands on the poison square
+        poison: (G, ctx, amount) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+          
+          // Remove the amount of money if poisoned
+          if (currentPlayerInfo.poison === true) {
+            currentPlayerInfo.money -= amount;
+          } else {
+            currentPlayerInfo.poison = true;
+          }
+
+          currentPlayerInfo.rolls -= 1;
+          G.closeAllModal = false;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+        // Cure the player of the poison
+        endPoison: (G, ctx) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+          currentPlayerInfo.poison = false;
+          G.closeAllModal = false;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo; 
         }
 
-        // Move the player to the new square
-        let newPosition = G.playerPosition[ctx.currentPlayer] + amount;
-        let tempArray = G.cells[newPosition];
 
-        // Makes sure tempArray is an array
-        if (tempArray === undefined) {
-          tempArray = [];
-        }
-        tempArray.push(ctx.currentPlayer)
-
-        G.playerPosition[ctx.currentPlayer] = newPosition;
-        G.cells[newPosition] = tempArray;
-        G.newSquare = newPosition
-        // G.closeAllModal = true;
-        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
-
-        // Remove one roll from their counter
-        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
-
-      },
-
-      // If the players lands on a square which alters their money
-      money: (G, ctx, amount) => {
-        G.closeAllModal = false;
-        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
-
-        // Adds the money to players money
-        currentPlayerInfo.money += amount;
-
-        // Remove one roll from their counter
-        currentPlayerInfo.rolls -= 1;
-        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
-      },
-
-      // If the player lands on a square which doesn't require functionality
-      doNothing: (G, ctx) => {
-        G.closeAllModal = false;
-        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
-
-        // Remove one roll from their counter
-        currentPlayerInfo.rolls -= 1;
-        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
-      },
-
-      // If the player lands on a square which gives you a double roll
-      double: (G, ctx) => {
-        let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
-
-        // Adds one roll to their next turn
-        currentPlayerInfo.rolls -=1;
-        currentPlayerInfo.double = true;
-        G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
       }
-
-
     }
-  }
-},
+  },
 
   // Start the game
   startGame: (G, ctx) => {
