@@ -1,4 +1,4 @@
-// src/server.js
+// For deployment
 import { Server } from 'boardgame.io/server';
 import path from 'path';
 import serve from 'koa-static';
@@ -18,3 +18,15 @@ server.run(PORT, () => {
     )
   )
 });
+
+// // For local
+// const { Server, FlatFile } = require('boardgame.io/server');
+// const { DrinkingGame } = require('./Game');
+
+// const server = Server({ games: [DrinkingGame],
+//     db: new FlatFile({
+//         dir: '/storage/directory',
+//         logging: (true),
+//       }), });
+//       server.run(8000);
+

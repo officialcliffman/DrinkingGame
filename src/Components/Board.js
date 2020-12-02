@@ -6,7 +6,14 @@ import PlayerSetup from './PlayerSetup';
 import Rules from './Rules';
 import '../App.css';
 
-export const TicTacToeBoard = (props) => {
+export const DrinkingGameBoard = (props) => {
+
+	// Checks to see if the current player is poisoned
+	useEffect(() => {
+		if (props.G.playerInfos[props.ctx.currentPlayer] !== undefined && props.G.playerInfos[props.ctx.currentPlayer].poison) {
+			props.moves.rollDie(0);
+		};
+	}, [props.ctx.currentPlayer]);
 
 	// Checks the rules for each square by action -- see Rules.js
 	const handleSquareRule = () => {
@@ -18,6 +25,10 @@ export const TicTacToeBoard = (props) => {
 				props.moves.move(Rules[playerPosition].amount);
 			} else if (Rules[playerPosition].action === "money") {
 				props.moves.money(Rules[playerPosition].amount);
+			} else if (Rules[playerPosition].action === "double") {
+				props.moves.double();
+			} else if (Rules[playerPosition].action === "poison") {
+				props.moves.poison(Rules[playerPosition].amount);
 			} else {
 				props.moves.doNothing();
 			}
@@ -46,6 +57,13 @@ export const TicTacToeBoard = (props) => {
 	// Handles the users choice on continuing at a checkpoint
 	const handleContinueClick = (cont, square) => {
 		props.moves.checkpointReached(cont, square);
+	}
+
+	// Handle the users choice on the poison squares
+	const handlePoisonButton = () => {
+			props.moves.endPoison()
+
+
 	}
 
 	// Gets the class names depending on whether its the current player
@@ -79,13 +97,13 @@ export const TicTacToeBoard = (props) => {
 		if (i % 2 === 0) {
 			numSquare -= 7;
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color }}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare++;
 			}
 			numSquare -= 9;
 		} else {
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color}}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color }}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare--;
 			}
 		}
@@ -122,16 +140,19 @@ export const TicTacToeBoard = (props) => {
 					</table>
 					<Dice rollDoneCallback={rollDoneCallback} />
 
-					<SquareInfo 
-					newSquare={props.G.newSquare}
-					 playerPosition={props.G.playerPosition} 
-					 handleContinueClick={handleContinueClick} 
-					 handleSquareRule={handleSquareRule} 
-					 currentPlayer={props.ctx.currentPlayer} 
-					 closeAllModal={props.G.closeAllModal} 
-					 playerID={props.playerID} 
-					 playerMoney={props.G.playerInfos[props.ctx.currentPlayer].money}
-					 playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint} />
+					<SquareInfo
+						newSquare={props.G.newSquare}
+						playerPosition={props.G.playerPosition}
+						handleContinueClick={handleContinueClick}
+						handleSquareRule={handleSquareRule}
+						currentPlayer={props.ctx.currentPlayer}
+						closeAllModal={props.G.closeAllModal}
+						playerID={props.playerID}
+						playerMoney={props.G.playerInfos[props.ctx.currentPlayer].money}
+						playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint}
+						poison={props.G.playerInfos[props.ctx.currentPlayer].poison}
+						handlePoisonButton={handlePoisonButton}
+					/>
 
 				</>
 			}
