@@ -2,7 +2,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 
 const boardSize = 57;
 
-export const TicTacToe = {
+export const DrinkingGame = {
   // Settings to setup before the game starts
   setup: () => ({
     cells: Array(boardSize).fill([]),
@@ -14,7 +14,7 @@ export const TicTacToe = {
   }),
 
   // Name of the game, links up with the server
-  name: "TicTacToe",
+  name: "DrinkingGame",
 
   // There are two phases, one for setup which is the lobby screen and the second is the main game
   phases: {
@@ -66,7 +66,9 @@ export const TicTacToe = {
                   money: 25,
                   rolls: 0,
                   double: false,
-                  checkpoint: 0
+                  checkpoint: 0,
+                  poison: false
+
                 };
 
               },
@@ -262,6 +264,7 @@ export const TicTacToe = {
             }
           }
         },
+
         // If the player lands on a square which moves them
         move: (G, ctx, amount) => {
           // Get the position of the current player
@@ -316,8 +319,42 @@ export const TicTacToe = {
           // Remove one roll from their counter
           currentPlayerInfo.rolls -= 1;
           G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
 
+        // If the player lands on a square which gives you a double roll
+        double: (G, ctx) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+
+          // Adds one roll to their next turn
+          currentPlayerInfo.rolls -= 1;
+          currentPlayerInfo.double = true;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+
+        // If the player lands on the poison square
+        poison: (G, ctx, amount) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+          
+          // Remove the amount of money if poisoned
+          if (currentPlayerInfo.poison === true) {
+            currentPlayerInfo.money -= amount;
+          } else {
+            currentPlayerInfo.poison = true;
+          }
+
+          currentPlayerInfo.rolls -= 1;
+          G.closeAllModal = false;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo;
+        },
+        // Cure the player of the poison
+        endPoison: (G, ctx) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+          currentPlayerInfo.poison = false;
+          G.closeAllModal = false;
+          G.playerInfos[ctx.currentPlayer] = currentPlayerInfo; 
         }
+
+
       }
     }
   },
