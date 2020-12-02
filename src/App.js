@@ -22,6 +22,7 @@ const App = () => {
     const createMatch = async () => {
         console.log("hell")
         console.log(server)
+        console.log(lobbyClient)
         const { matches } = await lobbyClient.listMatches('TicTacToe');
         console.log(matches)
         const { matchID } = await lobbyClient.createMatch("TicTacToe", {

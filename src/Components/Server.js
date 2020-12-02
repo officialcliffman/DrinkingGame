@@ -8,7 +8,7 @@ const server = Server({ games: [TicTacToe] });
 const PORT = process.env.PORT || 8000;
 
 // Build path relative to the server.js file
-const frontEndAppBuildPath = path.resolve(__dirname, './build');
+const frontEndAppBuildPath = path.resolve(__dirname, '../../build');
 server.app.use(serve(frontEndAppBuildPath))
 server.run(PORT, () => {
   server.app.use(
