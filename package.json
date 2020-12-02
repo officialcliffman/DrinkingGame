@@ -12,6 +12,7 @@
     "boardgame.io": "^0.42.0",
     "concurrently": "^5.3.0",
     "esm": "^3.2.25",
+    "koa-static": "^5.0.0",
     "node-persist": "^3.1.0",
     "react": "^16.8.0",
     "react-dice-complete": "^1.2.1",
@@ -21,11 +22,11 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node -r esm src/Components/Server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node -r esm src/Components/Server.js",
+    "serve": "node -r esm src/Components/Server.js",
     "dev": "concurrently \"npm run build\" \"npm run server\""
   },
   "eslintConfig": {

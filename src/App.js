@@ -6,18 +6,24 @@ import { LobbyClient } from 'boardgame.io/client';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css"
 
+const { protocol, hostname, port } = window.location;
+const server = `${protocol}//${hostname}:${port}`;
 const App = () => {
     const [joinMatchID, setJoinMatchID] = useState("");
     const [showError, setShowError] = useState(false);
     /**
      * Create a lobby which is hosted on the server
      */
-    const lobbyClient = new LobbyClient({ server: 'http://localhost:8000', });
+    const lobbyClient = new LobbyClient({ server: server });
 
     /**
      * Creates a match on the lobbyClient and returns a matchID
      */
     const createMatch = async () => {
+        console.log("hell")
+        console.log(server)
+        const { matches } = await lobbyClient.listMatches('TicTacToe');
+        console.log(matches)
         const { matchID } = await lobbyClient.createMatch("TicTacToe", {
             numPlayers: 6,
         })
@@ -55,7 +61,7 @@ const App = () => {
                             const { matchID } = props.match.params;
                             return (
                                 <>
-                                    <MainGame {...{ matchID, lobbyClient }} />
+                                    <MainGame {...{ matchID, lobbyClient, server }} />
                                 </>
                             );
                         }}

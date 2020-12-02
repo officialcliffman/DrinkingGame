@@ -4,7 +4,7 @@ import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import React, { useEffect, useState, useCallback } from 'react';
 
-const MainGame = ({ matchID, lobbyClient }) => {
+const MainGame = ({ matchID, lobbyClient, server }) => {
     /**
      * Creates a state to save the gameState
      */
@@ -20,7 +20,7 @@ const MainGame = ({ matchID, lobbyClient }) => {
             game: TicTacToe,
             board: TicTacToeBoard,
             numPlayers: 6,
-            multiplayer: SocketIO({ server: 'localhost:8000' }),
+            multiplayer: SocketIO({ server: server }),
         });
 
         // Gets the match that matches the ID and checks if the user has already joined this game, if they have assign playerID and playerCredentials
