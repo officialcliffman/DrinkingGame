@@ -9,7 +9,7 @@ import "./App.css"
 //  For deployment
 const { protocol, hostname, port } = window.location;
 const server = `${protocol}//${hostname}:${port}`;
-// // For local
+// For local
 // const server = "http://localhost:8000";
 const App = () => {
     const [joinMatchID, setJoinMatchID] = useState("");
