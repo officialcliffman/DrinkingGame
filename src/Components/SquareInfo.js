@@ -96,6 +96,6 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
             </Modal>
         </>
     );
-}
+};
 
 export default SquareInfo;

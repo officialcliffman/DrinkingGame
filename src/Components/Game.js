@@ -63,11 +63,12 @@ export const DrinkingGame = {
                   name: `Player ${parseInt(ctx.playerID) + 1}`,
                   color: newColor,
                   ready: false,
-                  money: 5,
+                  money: 25,
                   rolls: 0,
                   double: false,
                   checkpoint: 0,
                   poison: false
+
                 };
 
               },
@@ -193,6 +194,7 @@ export const DrinkingGame = {
               G.newSquare = 39;
               G.nextSquare = newPosition;
             } else {
+
 
               let tempArray = G.cells[newPosition];
 

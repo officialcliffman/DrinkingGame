@@ -63,6 +63,7 @@ export const DrinkingGameBoard = (props) => {
 	const handlePoisonButton = () => {
 			props.moves.endPoison()
 
+
 	}
 
 	// Gets the class names depending on whether its the current player
