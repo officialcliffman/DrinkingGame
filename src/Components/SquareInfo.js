@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Card, CardMedia, CardContent, Button } from '@material-ui/core';
 
-const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID, playerMoney, playerCheckpoint, poison, handlePoisonButton }) => {
+const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSquareRule, currentPlayer, closeAllModal, playerID, playerMoney, playerCheckpoint, poison, handlePoisonButton, handleTakeOffer }) => {
     // State to open and close modal
     const [open, setOpen] = useState(false);
 
@@ -29,8 +29,17 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
         }
     }
 
+    // Check to see if the player is on a choice square
+    const checkIfChoice = () => {
+        if (playerID === currentPlayer && newSquare === 15) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Checks to see if the user should be able to escape this square
-    const checkIfEscapeDisabled = () => {
+    const checkIfCheckpoint = () => {
         if (playerID === currentPlayer && ((newSquare === 23 && playerCheckpoint === 0) || (newSquare === 39 && playerCheckpoint === 1))) {
             return true
         } else {
@@ -63,7 +72,7 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
                 />
 
                 {/* If the player reaches a checkpoint square which they haven't purchased yet*/}
-                {checkIfEscapeDisabled() ?
+                {checkIfCheckpoint() ?
                     <CardContent>
                         <h2>Pay to continue?</h2>
                         <Button disabled={checkIfAffordable()} onClick={() => handleContinueClick(true, newSquare)}>Yes</Button>
@@ -80,6 +89,14 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
                     </CardContent>
                     :
                     ""}
+                {checkIfChoice() ?
+                    <CardContent>
+                        <h2>Take offer?</h2>
+                        <Button onClick={() => handleTakeOffer()}>Yes</Button>
+                        <Button onClick={() => handleClose()}>No</Button>
+                    </CardContent>
+                    :
+                    ""}
             </Card>
         </div>
     );
@@ -89,8 +106,8 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
                 open={open && closeAllModal}
                 onClose={() => handleClose()}
                 style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-                disableBackdropClick={checkIfEscapeDisabled() || checkIfPoisoned()}
-                disableEscapeKeyDown={checkIfEscapeDisabled() || checkIfPoisoned()}
+                disableBackdropClick={checkIfCheckpoint() || checkIfPoisoned() || checkIfChoice()}
+                disableEscapeKeyDown={checkIfCheckpoint() || checkIfPoisoned() || checkIfChoice()}
             >
                 {body}
             </Modal>

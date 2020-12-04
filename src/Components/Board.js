@@ -5,15 +5,16 @@ import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import PlayerSetup from './PlayerSetup';
 import Rules from './Rules';
 import '../App.css';
+import TimerModal from './TimerModal';
 
 export const DrinkingGameBoard = (props) => {
-
+	let playerInfo = props.G.playerInfos[props.ctx.currentPlayer];
 	// Checks to see if the current player is poisoned
 	useEffect(() => {
-		if (props.G.playerInfos[props.ctx.currentPlayer] !== undefined && props.G.playerInfos[props.ctx.currentPlayer].poison) {
+		if (playerInfo !== undefined && playerInfo.poison) {
 			props.moves.rollDie(0);
 		};
-	}, [props.ctx.currentPlayer]);
+	}, [playerInfo, props.moves]);
 
 	// Checks the rules for each square by action -- see Rules.js
 	const handleSquareRule = () => {
@@ -61,10 +62,16 @@ export const DrinkingGameBoard = (props) => {
 
 	// Handle the users choice on the poison squares
 	const handlePoisonButton = () => {
-			props.moves.endPoison()
-
-
+		props.moves.endPoison()
 	}
+
+	const handleTakeOffer = () => {
+		props.moves.offerOne()
+	};
+
+	const handleChoiceOneComplete = (complete) => {
+		props.moves.offerOneComplete(complete)
+	};
 
 	// Gets the class names depending on whether its the current player
 	const getPlayerClass = (player) => {
@@ -101,13 +108,13 @@ export const DrinkingGameBoard = (props) => {
 		if (i % 2 === 0) {
 			numSquare -= 7;
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} className={"squares"} style={{backgroundImage: getImage(numSquare), backgroundSize: '125px 100px'}}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} className={"squares"} style={{ backgroundImage: getImage(numSquare), backgroundSize: '125px 100px' }}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare++;
 			}
 			numSquare -= 9;
 		} else {
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} className={"squares"} style={{backgroundImage: getImage(numSquare), backgroundSize: '125px 100px'}}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} className={"squares"} style={{ backgroundImage: getImage(numSquare), backgroundSize: '125px 100px' }}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare--;
 			}
 		}
@@ -156,7 +163,17 @@ export const DrinkingGameBoard = (props) => {
 						playerCheckpoint={props.G.playerInfos[props.ctx.currentPlayer].checkpoint}
 						poison={props.G.playerInfos[props.ctx.currentPlayer].poison}
 						handlePoisonButton={handlePoisonButton}
+						handleTakeOffer={handleTakeOffer}
 					/>
+					{/* Will display a 10 second timer for the player to down their drink */}
+					{props.G.timer ?
+						<TimerModal
+							handleChoiceOneComplete={handleChoiceOneComplete}
+							playerID={props.playerID}
+							currentPlayer={props.ctx.currentPlayer}
+						/>
+						: ""
+					}
 
 				</>
 			}

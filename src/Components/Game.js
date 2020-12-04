@@ -10,7 +10,8 @@ export const DrinkingGame = {
     playerInfos: {},
     newSquare: 0,
     nextSquare: 0,
-    closeAllModal: false
+    closeAllModal: false,
+    timer: false
   }),
 
   // Name of the game, links up with the server
@@ -178,7 +179,6 @@ export const DrinkingGame = {
           if (G.cells[playerPosition]) {
             let newPosition = G.playerPosition[ctx.currentPlayer] + num;
             let tempArray;
-            let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
             // Sends player back to start if player reaches end of board
             if (newPosition > 22 && G.playerInfos[ctx.currentPlayer].checkpoint === 0) {
               tempArray = G.cells[23];
@@ -367,6 +367,19 @@ export const DrinkingGame = {
           currentPlayerInfo.poison = false;
           G.closeAllModal = false;
           G.playerInfos[ctx.currentPlayer] = currentPlayerInfo; 
+        },
+        offerOne: (G, ctx) => {
+          G.closeAllModal = false;
+          G.timer = true;
+        },
+        offerOneComplete: (G, ctx, complete) => {
+          let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
+          if(complete){
+            currentPlayerInfo.money += 5;
+            G.playerInfos[ctx.currentPlayer] = currentPlayerInfo; 
+          }
+          G.timer = false;
+          currentPlayerInfo.rolls -= 1;
         }
 
 

@@ -37,7 +37,6 @@ const App = () => {
 
     const joinMatch = async () => {
         try {
-            const match = await lobbyClient.getMatch('DrinkingGame', joinMatchID);
             window.location.href = `/match/${joinMatchID}`;
             setJoinMatchID("");
         } catch {
