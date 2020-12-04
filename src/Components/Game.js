@@ -177,26 +177,41 @@ export const DrinkingGame = {
           // Set the new player position
           if (G.cells[playerPosition]) {
             let newPosition = G.playerPosition[ctx.currentPlayer] + num;
-
+            let tempArray;
+            let currentPlayerInfo = G.playerInfos[ctx.currentPlayer];
             // Sends player back to start if player reaches end of board
             if (newPosition > 22 && G.playerInfos[ctx.currentPlayer].checkpoint === 0) {
-              let tempArray = G.cells[23];
+              tempArray = G.cells[23];
               tempArray.push(ctx.currentPlayer)
               G.playerPosition[ctx.currentPlayer] = 23;
               G.cells[23] = tempArray;
               G.newSquare = 23;
               G.nextSquare = newPosition;
             } else if (newPosition > 38 && G.playerInfos[ctx.currentPlayer].checkpoint === 1) {
-              let tempArray = G.cells[39];
+              tempArray = G.cells[39];
               tempArray.push(ctx.currentPlayer)
               G.playerPosition[ctx.currentPlayer] = 39;
               G.cells[39] = tempArray;
               G.newSquare = 39;
               G.nextSquare = newPosition;
-            } else {
+            } 
+            // Handles if the player lands on a "Turn ends here" square
+            else if(G.playerPosition[ctx.currentPlayer] < 9 && (G.playerPosition[ctx.currentPlayer] + num) > 9 ){
+              tempArray = G.cells[9];
+              tempArray.push(ctx.currentPlayer);
+              G.playerPosition[ctx.currentPlayer] = 9;
+              G.cells[9] = tempArray;
+              G.newSquare = 9;
+            }else if(G.playerPosition[ctx.currentPlayer] < 35 && (G.playerPosition[ctx.currentPlayer] + num) > 35 ){
+              tempArray = G.cells[35];
+              tempArray.push(ctx.currentPlayer);
+              G.playerPosition[ctx.currentPlayer] = 35;
+              G.cells[35] = tempArray;
+              G.newSquare = 35;
+            }else {
 
 
-              let tempArray = G.cells[newPosition];
+              tempArray = G.cells[newPosition];
 
               // Makes sure tempArray is an array
               if (tempArray === undefined) {
