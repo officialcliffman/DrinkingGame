@@ -90,6 +90,10 @@ export const DrinkingGameBoard = (props) => {
 		return tempArray;
 	}
 
+	const getImage = (num) => {
+		return "url(/Images/square" + num + ".jpg)";
+	}
+
 	// Build Board
 	let numSquare = 55;
 	const getRow = (i) => {
@@ -97,13 +101,13 @@ export const DrinkingGameBoard = (props) => {
 		if (i % 2 === 0) {
 			numSquare -= 7;
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color }}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} className={"squares"} style={{backgroundImage: getImage(numSquare), backgroundSize: '125px 100px'}}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare++;
 			}
 			numSquare -= 9;
 		} else {
 			for (let j = 0; j < 8; j++) {
-				tempArray.push(<td id={numSquare} style={{ height: 100, width: 100, backgroundColor: Rules[numSquare].color }}>{getPieces(props.G.cells[numSquare])}</td>)
+				tempArray.push(<td id={numSquare} className={"squares"} style={{backgroundImage: getImage(numSquare), backgroundSize: '125px 100px'}}>{getPieces(props.G.cells[numSquare])}</td>)
 				numSquare--;
 			}
 		}

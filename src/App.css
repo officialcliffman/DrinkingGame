@@ -63,3 +63,12 @@ left: 38%;
 .join-game{
   margin-left: 13%;
 }
+
+#t01{
+  width: 1000px;
+}
+
+.squares{
+  width: 125px;
+  height: 100px
+}

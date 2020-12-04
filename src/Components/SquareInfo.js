@@ -51,12 +51,12 @@ const SquareInfo = ({ newSquare, playerPosition, handleContinueClick, handleSqua
 
     // The body of the modal
     const body = (
-        <div style={{ backgroundColor: "white", width: "200px", height: "200px" }}>
+        <div style={{ backgroundColor: "white", width: "400px", height: "400px" }}>
             <Card >
                 <CardMedia
                     image={'/Images/square' + newSquare + '.jpg'}
                     title="Square"
-                    style={{ height: 100 }}
+                    style={{ height: 400, width: 400 }}
                     width="50"
                     component="img"
                     alt={"Square " + newSquare + " image"}

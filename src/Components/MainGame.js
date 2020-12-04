@@ -71,7 +71,7 @@ const MainGame = ({ matchID, lobbyClient, server }) => {
                 }
             </>
         )
-    },[lobbyClient, matchID]);
+    },[lobbyClient, matchID, server]);
 
     // On load, get the state of the match
     useEffect(() => {
