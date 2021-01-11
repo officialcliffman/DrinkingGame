@@ -1,10 +1,11 @@
-import { DrinkingGameBoard } from './Board';
-import { DrinkingGame } from './Game';
+import { DrinkingGameBoard } from '../Board';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import React, { useEffect, useState, useCallback } from 'react';
+import { Pobololomolono } from './PobololomolonoRules';
 
-const MainGame = ({ matchID, lobbyClient, server }) => {
+
+const PobololomolonoSetup = ({ matchID, lobbyClient, server, game }) => {
     /**
      * Creates a state to save the gameState
      */
@@ -14,14 +15,12 @@ const MainGame = ({ matchID, lobbyClient, server }) => {
      * A function which gets the game state
      */
     const getPlayers = useCallback( async () => {
-
-        // Creates the game client
         const DrinkingGameClient = Client({
-            game: DrinkingGame,
-            board: DrinkingGameBoard,
-            numPlayers: 6,
-            multiplayer: SocketIO({ server: server }),
-        });
+                game: Pobololomolono,
+                board: DrinkingGameBoard,
+                numPlayers: 6,
+                multiplayer: SocketIO({ server: server }),
+            });
 
         // Gets the match that matches the ID and checks if the user has already joined this game, if they have assign playerID and playerCredentials
         const match = await lobbyClient.getMatch('DrinkingGame', matchID);
@@ -71,7 +70,7 @@ const MainGame = ({ matchID, lobbyClient, server }) => {
                 }
             </>
         )
-    },[lobbyClient, matchID]);
+    },[lobbyClient, matchID, server]);
 
     // On load, get the state of the match
     useEffect(() => {
@@ -91,4 +90,4 @@ const MainGame = ({ matchID, lobbyClient, server }) => {
 
 
 
-export default MainGame;
+export default PobololomolonoSetup;

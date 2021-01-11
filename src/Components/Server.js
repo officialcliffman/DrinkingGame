@@ -21,9 +21,10 @@
 
 // For local
 const { Server, FlatFile } = require('boardgame.io/server');
-const { DrinkingGame } = require('./Game');
+const { DrinkingGame } = require('./DrinkingGame/DrinkingGameRules');
+const { Pobololomolono } = require('./Pobololomolono/PobololomolonoRules')
 
-const server = Server({ games: [DrinkingGame],
+const server = Server({ games: [DrinkingGame, Pobololomolono],
     db: new FlatFile({
         dir: '/storage/directory',
         logging: (true),
