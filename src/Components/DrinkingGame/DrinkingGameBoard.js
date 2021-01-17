@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import Dice from './Dice';
-import SquareInfo from './SquareInfo'
+import Dice from '../Dice';
+import SquareInfo from '../SquareInfo'
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
-import PlayerSetup from './PlayerSetup';
-import Rules from './Rules';
-import '../App.css';
+import PlayerSetup from '../PlayerSetup';
+import Rules from '../Rules';
+import '../../App.css';
 
 export const DrinkingGameBoard = (props) => {
 

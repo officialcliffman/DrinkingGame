@@ -20,10 +20,10 @@
 // });
 
 // For local
-const { Server, FlatFile } = require('boardgame.io/server');
-const { DrinkingGame } = require('./DrinkingGame/DrinkingGameRules');
-const { Pobololomolono } = require('./Pobololomolono/PobololomolonoRules')
-
+import { Server, FlatFile } from 'boardgame.io/server';
+import {Pobololomolono} from './Pobololomolono/PobololomolonoRules'
+import { DrinkingGame } from './DrinkingGame/DrinkingGameRules';
+console.log("hi")
 const server = Server({ games: [DrinkingGame, Pobololomolono],
     db: new FlatFile({
         dir: '/storage/directory',

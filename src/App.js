@@ -7,7 +7,6 @@ import Pobololomolono from './Components/Pobololomolono/Pobololomolono';
 import BoardGame from './Components/DrinkingGame/BoardGame';
 
 const App = () => {
-    const [joinMatchID, setJoinMatchID] = useState("");
     const [showError, setShowError] = useState(false);
 
     /**
@@ -59,7 +58,7 @@ const App = () => {
 
                                     <Button className={"main-menu-button"} onClick={() => drinkingGame()}>Drinking Game</Button>
                                     <br></br>
-                                    <Button onClick={() => pobololomolono()}>Pobololomolono</Button>
+                                    <Button className={"main-menu-button"} onClick={() => pobololomolono()}>Pobololomolono</Button>
 
                                 </div>
                             );

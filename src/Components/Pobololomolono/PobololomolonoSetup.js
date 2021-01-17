@@ -1,4 +1,4 @@
-import { DrinkingGameBoard } from '../Board';
+import { PobololomolonoBoard } from './PobololomolonoBoard';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -15,15 +15,15 @@ const PobololomolonoSetup = ({ matchID, lobbyClient, server, game }) => {
      * A function which gets the game state
      */
     const getPlayers = useCallback( async () => {
-        const DrinkingGameClient = Client({
+        const PobololomolonoClient = Client({
                 game: Pobololomolono,
-                board: DrinkingGameBoard,
+                board: PobololomolonoBoard,
                 numPlayers: 6,
                 multiplayer: SocketIO({ server: server }),
             });
 
         // Gets the match that matches the ID and checks if the user has already joined this game, if they have assign playerID and playerCredentials
-        const match = await lobbyClient.getMatch('DrinkingGame', matchID);
+        const match = await lobbyClient.getMatch('Pobololomolono', matchID);
         let playerID = null;
         let playerCredentials = null;
         playerID = window.localStorage.getItem(`playerID for matchID=${matchID}`);
@@ -46,7 +46,7 @@ const PobololomolonoSetup = ({ matchID, lobbyClient, server, game }) => {
             }
 
             // Join the game with the newly assigned playerID
-            const resp = await lobbyClient.joinMatch("DrinkingGame", matchID, {
+            const resp = await lobbyClient.joinMatch("Pobololomolono", matchID, {
                 playerID,
                 playerName: playerID,
             });
@@ -66,7 +66,7 @@ const PobololomolonoSetup = ({ matchID, lobbyClient, server, game }) => {
                 {playerID === null ?
                     <div>Loading...</div>
                     :
-                    <DrinkingGameClient playerID={playerID} matchID={matchID} credentials={playerCredentials}/>
+                    <PobololomolonoClient playerID={playerID} matchID={matchID} credentials={playerCredentials}/>
                 }
             </>
         )

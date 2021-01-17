@@ -1,4 +1,4 @@
-import { DrinkingGameBoard } from '../Board';
+import { DrinkingGameBoard } from './DrinkingGameBoard';
 import { DrinkingGame } from './DrinkingGameRules';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
